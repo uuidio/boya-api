@@ -1,0 +1,27 @@
+/node_modules
+/public/hot
+/public/admin
+/public/storage
+/storage/*.key
+/vendor
+/config/cert/wechat
+.env
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+.DS_Store
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+/public/uploads
+public/nginx.htaccess

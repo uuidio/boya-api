@@ -1,0 +1,35 @@
+迁移基本配置
+DB_DATABASE_MASTER=
+SHOP_ID_RADIX=
+FLOORS_ID_RADIX=
+REL_CAT_ID_RADIX=
+TEMPLATES_ID_RADIX=
+SELLER_ID_RADIX=
+GOODS_ID_RADIX=
+
+需观察自增的表
+
+shops （ 店铺表 ）
+shop_floors （ 店铺楼层表 ）
+shop_rel_cats （ 商场店铺分类表 ）
+logistics_templates （ 物流模板 ）
+seller_accounts  （ 商家用户表 ）
+goods  （ 商品表 ）
+
+#会员迁移
+./vendor/bin/phpunit tests/Unit/Services/UserUpdateServiceTest
+#商品迁移
+./vendor/bin/phpunit tests/Unit/Services/GoodsDataServiceTest
+#商家账号迁移
+./vendor/bin/phpunit tests/Unit/Services/SellerUpdateServiceTest
+#商家相关信息迁移
+./vendor/bin/phpunit tests/Unit/Services/ShopUpdateServiceTest
+
+需要加字段的表
+user_accounts   -	old_source_id
+wx_userinfos	-	old_source_id
+user_addresses	- 	old_source_id
+shops			- 	ego_shop_id
+goods 			-	ego_goods_id
+php artisan make:migration add_ego_old_data
+

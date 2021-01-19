@@ -1,0 +1,55 @@
+<?php
+/**
+ * @Filename        ActivitiesRewardGoodsCreateRequest.php
+ *
+ * @Copyright       Copyright (c) 2015~2020 <http://www.shopem.cn> All rights reserved.
+ * @License         Licensed <http://www.shopem.cn/licenses/>
+ * @Author          hfh
+ */
+
+
+namespace ShopEM\Http\Requests\Platform;
+
+use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class ActivitiesRewardGoodsCreateRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'goods_name'   => 'required',
+            'goods_serial' => 'required',
+            'goods_image'  => 'required',
+        ];
+    }
+
+    /**
+     * Get rule messages.
+     * @author moocde <mo@mocode.cn>
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'goods_name.required'   => '请输入商品名称',
+            'goods_serial.required' => '请输入货号',
+            'goods_image.required'  => '请输入图片',
+        ];
+    }
+}
