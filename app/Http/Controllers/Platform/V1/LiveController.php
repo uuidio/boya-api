@@ -23,6 +23,7 @@ use ShopEM\Services\Live\LiveAnchorService;
 use ShopEM\Models\LiveRebroadcast;
 use ShopEM\Models\LiveUsers;
 use ShopEM\Models\Notice;
+use ShopEM\Services\Upload\UploadImage;
 
 class LiveController extends BaseController
 {
@@ -270,7 +271,15 @@ class LiveController extends BaseController
      */
     public function noticeAdd(Request $request)
     {
-        $data = $request->only('title','notice');
+        $data = $request->only('title','notice','location','wide_ratio');
+
+        $uploadImage = new UploadImage($request);
+        #unset($data['image']);
+        $res = $uploadImage->save();
+        if(isset($res['code']) && $res['code'] > 0) {
+            return $res;
+        }
+        $data['img'] = $res['result']['pic_url'];
         Notice::create($data);
 
         return $this->resSuccess();
@@ -287,8 +296,18 @@ class LiveController extends BaseController
         if (empty($notice)) {
             return $this->resFailed(700, '数据不存在');
         }
+        $uploadImage = new UploadImage($request);
+        #  unset($data['image']);
+        $res = $uploadImage->save();
+        if(isset($res['code']) && $res['code'] > 0) {
+            return $res;
+        }
+        $data['img'] = $res['result']['pic_url'];
         $notice->title = $request->title;
         $notice->notice = $request->notice;
+        $notice->location = $request->location;
+        $notice->wide_ratio = $request->wide_ratio;
+        $notice->img = $data['img'];
         $notice->save();
 
         return $this->resSuccess();
