@@ -27,6 +27,7 @@ Route::namespace('ShopEM\Http\Controllers\Live\V1')->group(function () {
 
 Route::namespace('ShopEM\Http\Controllers\Live\V1')->middleware('auth:live_users')->group(function () {
 
+    Route::get('live/oauth', 'PassportController@loginOauth');   //
     Route::post('live/begin', 'LiveController@begin');   // 开始直播
     Route::get('live/end', 'LiveController@end');   // 关闭直播
     Route::get('live/record', 'LiveController@liveRecord');   // 开始录制

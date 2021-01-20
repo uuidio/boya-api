@@ -19,7 +19,9 @@ use ShopEM\Models\LiveUsers;
 use ShopEM\Models\Lives;
 use ShopEM\Traits\ProxyOauth;
 use ShopEM\Http\Requests\Live\LiveUserRequest;
-
+use ShopEM\Models\OauthAccessTokens;
+use ShopEM\Models\OauthAccessTokenProviders;
+use ShopEM\Models\OauthRefreshTokens;
 
 class PassportController extends BaseController
 {
@@ -32,6 +34,7 @@ class PassportController extends BaseController
      */
     public function login(loginRequest $request)
     {
+
         $hasUser = LiveUsers::where('login_account', $request->username)->first();
 
         if (empty($hasUser)) {
@@ -44,6 +47,25 @@ class PassportController extends BaseController
         }
 
         return $this->resSuccess($token);
+    }
+
+    /**
+     * @Author linzhe
+     * @param UserAccountRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loginOauth(Request $request)
+    {
+        $token = Auth::guard('live_users')->user()->token()->toArray();
+        $live_id = $this->user->live_id;
+        $token_id = LiveUsers::where('id',$live_id)->select('oauth_access_token_id')->first();
+        if($token_id['oauth_access_token_id']){
+            OauthAccessTokens::where('id', $token_id['oauth_access_token_id'])->delete();
+            OauthAccessTokenProviders::where('oauth_access_token_id',$token_id['oauth_access_token_id'])->delete();
+            OauthRefreshTokens::where('access_token_id', $token_id['oauth_access_token_id'])->delete();
+        }
+        LiveUsers::where('id',$live_id)->update(['oauth_access_token_id'=>$token['id']]);
+        return $this->resSuccess();
     }
 
     /**
@@ -103,6 +125,8 @@ class PassportController extends BaseController
      */
     public function sendLoginCode(Request $request)
     {
+        return $this->resFailed(600, '请使用手机号一键登录');
+
         $params = [
             'mobile' => $request->mobile,
             'domain' => 'login',
