@@ -125,8 +125,6 @@ class PassportController extends BaseController
      */
     public function sendLoginCode(Request $request)
     {
-        return $this->resFailed(600, '请使用手机号一键登录');
-
         $params = [
             'mobile' => $request->mobile,
             'domain' => 'login',
