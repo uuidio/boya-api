@@ -15,7 +15,7 @@ class AddNotice extends Migration
     {
         Schema::table('notice', function (Blueprint $table) {
             $table->string('img',255)->nullable()->comment('图片');
-            $table->string('location', 100)>comment('图片位置');
+            $table->string('location', 100)->comment('图片位置');
             $table->string('wide_ratio', 50)->comment('图片宽比例');
         });
     }
