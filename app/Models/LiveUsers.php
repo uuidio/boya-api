@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
-class liveUsers extends Authenticatable
+class LiveUsers extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
