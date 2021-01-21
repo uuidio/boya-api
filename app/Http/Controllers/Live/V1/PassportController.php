@@ -91,7 +91,7 @@ class PassportController extends BaseController
      */
     public function register(LiveUserRequest $request)
     {
-        $input_data = $request->only('login_account', 'mobile','password','company','code');
+        $input_data = $request->only('login_account', 'mobile','password','company','code','username');
         $check = checkCode('login', $input_data['mobile'], $input_data['code']);
         if ($check['code']) {
             return $this->resFailed(600, $check['msg']);
@@ -111,6 +111,7 @@ class PassportController extends BaseController
         $data['mobile'] = $input_data['mobile'];
         $data['login_account'] = $input_data['login_account'];
         $data['company'] = $input_data['company'];
+        $data['username'] = $input_data['username'];
         LiveUsers::create($data);
 
         $token = $this->authenticate('live_users', $data['login_account'], $data['password']);
