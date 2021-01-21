@@ -98,7 +98,7 @@ class PassportController extends BaseController
         }
         $chars = "/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|19[0-9]{1}[0-9]{8}$|16[0-9]{1}[0-9]{8}$/";
 
-        if(!preg_match($chars, $input_data['login_account']))
+        if(!preg_match($chars, $input_data['mobile']))
         {
             return $this->resFailed(600, '手机号格式错误');
         }
