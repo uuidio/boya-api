@@ -10,7 +10,7 @@
 namespace ShopEM\Services\Payment;
 
 
-class alipayApp
+class AlipayApp
 {
     /**
      * 后台配置参数设置

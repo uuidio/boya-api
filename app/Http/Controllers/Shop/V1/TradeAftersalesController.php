@@ -27,7 +27,7 @@ use ShopEM\Models\TradePaybill;
 use ShopEM\Models\TradeRefunds;
 
 
-class TradeAfterSalesController extends BaseController
+class TradeAftersalesController extends BaseController
 {
 
 
