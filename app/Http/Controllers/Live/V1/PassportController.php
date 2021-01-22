@@ -47,7 +47,8 @@ class PassportController extends BaseController
         if (!$token) {
             return $this->resFailed(402);
         }
-
+        $expiration = date('Y-m-d H:i:s',strtotime('+1year', strtotime($hasUser['created_at'])));//
+        $token['expiration'] = $expiration;
         return $this->resSuccess($token);
     }
 
