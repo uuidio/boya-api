@@ -49,6 +49,7 @@ class PassportController extends BaseController
         }
         $expiration = date('Y-m-d H:i:s',strtotime('+1year', strtotime($hasUser['created_at'])));//
         $token['expiration'] = $expiration;
+        $token['username'] = $hasUser['username'];
         return $this->resSuccess($token);
     }
 
