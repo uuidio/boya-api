@@ -169,11 +169,13 @@ class PassportController extends BaseController
         $user_id = $this->user->id;
 
         try {
-            $data = LiveUsers::where('id','=',$user_id)->select('id','username','img_url')->first();
+            $data = LiveUsers::where('id','=',$user_id)->select('id','username','img_url','created_at')->first();
         } catch (\Exception $e) {
             return $this->resFailed(702, $e->getMessage());
         }
-
+        $expiration = date('Y-m-d H:i:s',strtotime('+1year', strtotime($data['created_at'])));//
+        $data['expiration'] = $expiration;
+        unset($data['created_at']);
         return $this->resSuccess([
             'data' => $data
         ]);
