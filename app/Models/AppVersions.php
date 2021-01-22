@@ -18,14 +18,14 @@ class AppVersions extends Model
      * @param $value
      * @return string
      */
-    public function getUrlAttribute($value)
-    {
-        if ($this->filesystem === 'oss') {
-            return config('filesystems.disks.oss.domain') . $value;
-        }
-
-        return Storage::disk($this->filesystem)->url($value);
-    }
+//    public function getUrlAttribute($value)
+//    {
+//        if ($this->filesystem === 'oss') {
+//            return config('filesystems.disks.oss.domain') . $value;
+//        }
+//
+//        return Storage::disk($this->filesystem)->url($value);
+//    }
 }
 
 

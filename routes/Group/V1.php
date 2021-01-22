@@ -23,6 +23,8 @@ Route::namespace('ShopEM\Http\Controllers\Group\V1')->middleware('auth:group_use
     Route::post('/upload/image', 'UploadController@image')->name('upload.image'); // 上传图片
     Route::post('/upload/apk', 'UploadController@apk')->name('upload.apk'); // 上传apk
     Route::get('/apk/get', 'UploadController@apkGet')->name('get.apk'); // 获取apk
+
+    Route::post('/versions/add', 'UploadController@versionsAdd')->name('versions.add'); // 上传apk
 	/**
 	 * 平台项目关系
 	 */
