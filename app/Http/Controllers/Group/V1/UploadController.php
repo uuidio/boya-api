@@ -15,6 +15,7 @@ use ShopEM\Services\Upload\UploadImage;
 use Illuminate\Http\Request;
 use ShopEM\Services\Upload\UploadApk;
 use ShopEM\Models\AppVersions;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends BaseController
 {
