@@ -77,7 +77,7 @@ class UploadController extends BaseController
 
         #$new = AppVersions::orderBy('id', 'desc')->first();
 
-        return Storage::disk($this->filesystem)->url($data['url']);
+        return $this->resSuccess('https://lanlink.smartconns.com/uploads/'.$data['url']);
     }
 
     /**
