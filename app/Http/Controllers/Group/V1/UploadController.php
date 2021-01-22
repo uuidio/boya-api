@@ -59,6 +59,10 @@ class UploadController extends BaseController
     {
         ini_set('max_input_time', 3000);
         ini_set('max_execution_time ', 3000);
+        $hasVersions = AppVersions::where('versions',$request['versions'])->count();
+        if($hasVersions){
+            return $this->resFailed(702, '版本号已存在');
+        }
 
         $uploadVideo = new UploadApk($request);
 
@@ -70,6 +74,8 @@ class UploadController extends BaseController
 
         $data['url'] = $res['result']['apk_url'];
         $data['file_name'] = $res['result']['apk_name'];
+        $data['versions'] = $request['versions'];
+        $data['content'] = $request['content'];
         AppVersions::create($data);
 
         $new = AppVersions::orderBy('id', 'desc')->first();

@@ -23,6 +23,8 @@ Route::namespace('ShopEM\Http\Controllers\Live\V1')->group(function () {
     Route::post('live/recordNotify', 'LiveController@recordNotifyUrl');   // 录制异步回调
     Route::post('live/beginNotify', 'LiveController@treamBeginNotifyUrl');// 推流异步回调
     Route::post('assistant/raffles/result', 'AssistantController@refflesResult');    //开奖
+
+    Route::get('versions/check', 'PassportController@versions');    //版本
 });
 
 Route::namespace('ShopEM\Http\Controllers\Live\V1')->middleware('auth:live_users')->group(function () {

@@ -23,6 +23,7 @@ use ShopEM\Models\OauthAccessTokens;
 use ShopEM\Models\OauthAccessTokenProviders;
 use ShopEM\Models\OauthRefreshTokens;
 use Illuminate\Support\Facades\DB;
+use ShopEM\Models\AppVersions;
 
 class PassportController extends BaseController
 {
@@ -202,5 +203,17 @@ class PassportController extends BaseController
         return $this->resSuccess();
     }
 
-
+    /**
+     * 获取版本
+     *
+     * @Author LINZHE
+     */
+    public function versions(Request $request)
+    {
+        $data = AppVersions::orderBy('id', 'desc')->first();
+        if($data['versions'] != $request->versions){
+            return $this->resFailed(702, '已是最新版本');
+        }
+        return $this->resSuccess($data);
+    }
 }
