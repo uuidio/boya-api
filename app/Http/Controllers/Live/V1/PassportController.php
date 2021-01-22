@@ -212,8 +212,8 @@ class PassportController extends BaseController
     {
         $data = AppVersions::orderBy('id', 'desc')->first();
         if($data['versions'] == $request->versions){
-            $error = json_encode();
-            return $this->resFailed(702, '已是最新版本',$error);
+          #  $error = json_encode();
+            return $this->resFailed(702, '已是最新版本');
         }
         return $this->resSuccess($data);
     }
