@@ -22,6 +22,7 @@ use ShopEM\Http\Requests\Live\LiveUserRequest;
 use ShopEM\Models\OauthAccessTokens;
 use ShopEM\Models\OauthAccessTokenProviders;
 use ShopEM\Models\OauthRefreshTokens;
+use Illuminate\Support\Facades\DB;
 
 class PassportController extends BaseController
 {
