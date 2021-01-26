@@ -40,12 +40,12 @@ class PassportController extends BaseController
         $hasUser = LiveUsers::where('login_account', $request->username)->first();
 
         if (empty($hasUser)) {
-            return $this->resFailed(402);
+            return $this->resFailed(402,'用户名或密码错误',(Object)[]);
         }
         $token = $this->authenticate('live_users');
 
         if (!$token) {
-            return $this->resFailed(402);
+            return $this->resFailed(402,'用户名或密码错误',(Object)[]);
         }
         $expiration = date('Y-m-d H:i:s',strtotime('+1year', strtotime($hasUser['created_at'])));//
         $token['expiration'] = $expiration;
