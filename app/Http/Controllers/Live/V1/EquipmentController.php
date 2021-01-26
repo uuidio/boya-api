@@ -84,7 +84,7 @@ class EquipmentController extends BaseController
         try {
             $admin = AutocueClassify::find(intval($request->id));
             if (empty($admin)) {
-                return $this->resFailed(700, '删除的数据不存在');
+                return $this->resFailed(700, '删除的数据不存在',(Object)[]);
             }
             $admin->delete();
             Autocue::where('cid', $request->id)->delete();
@@ -107,7 +107,7 @@ class EquipmentController extends BaseController
     {
         $classify = AutocueClassify::find(intval($request->id));
         if (empty($classify)) {
-            return $this->resFailed(700, '数据不存在');
+            return $this->resFailed(700, '数据不存在',(Object)[]);
         }
         $classify->classify_name = $request->classify_name;
         $classify->save();
@@ -126,7 +126,7 @@ class EquipmentController extends BaseController
         $data = $request->only('cid','title', 'antistop_one','antistop_two','antistop_three','content','sort');
         $classify = AutocueClassify::find($data['cid']);
         if(empty($classify)) {
-            return $this->resFailed(701,"提词器分类不存在!");
+            return $this->resFailed(701,"提词器分类不存在!",(Object)[]);
         }
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
@@ -191,7 +191,7 @@ class EquipmentController extends BaseController
         try {
             $admin = Autocue::find(intval($request->id));
             if (empty($admin)) {
-                return $this->resFailed(700, '删除的数据不存在');
+                return $this->resFailed(700, '删除的数据不存在',(Object)[]);
             }
             $admin->delete();
             return $this->resSuccess();
@@ -259,7 +259,7 @@ class EquipmentController extends BaseController
         try {
             $admin = Tag::find(intval($request->id));
             if (empty($admin)) {
-                return $this->resFailed(700, '删除的数据不存在');
+                return $this->resFailed(700, '删除的数据不存在',(Object)[]);
             }
             $admin->delete();
             TagImage::where('tag_id', $request->id)->delete();
@@ -282,7 +282,7 @@ class EquipmentController extends BaseController
     {
         $tag = Tag::find(intval($request->id));
         if (empty($tag)) {
-            return $this->resFailed(700, '数据不存在');
+            return $this->resFailed(700, '数据不存在',(Object)[]);
         }
         $tag->name = $request->name;
         $tag->save();
@@ -302,7 +302,7 @@ class EquipmentController extends BaseController
 
         $tag = Tag::find($data['tag_id']);
         if(empty($tag)) {
-            return $this->resFailed(701,"贴纸分类不存在!");
+            return $this->resFailed(701,"贴纸分类不存在!",(Object)[]);
         }
         $uploadImage = new UploadImage($request);
         unset($data['image']);
@@ -332,7 +332,7 @@ class EquipmentController extends BaseController
         try {
             $admin = TagImage::find(intval($request->id));
             if (empty($admin)) {
-                return $this->resFailed(700, '删除的数据不存在');
+                return $this->resFailed(700, '删除的数据不存在',(Object)[]);
             }
             $admin->delete();
             return $this->resSuccess();
@@ -379,7 +379,7 @@ class EquipmentController extends BaseController
         $data['live_id'] = $liveId;
         $isTagImgge = TagImage::find($data['img_id']);
         if (empty($isTagImgge)) {
-            return $this->resFailed(700, '数据不存在');
+            return $this->resFailed(700, '数据不存在',(Object)[]);
         }
         if($data['select'] == '1'){
             LiveTagImage::create($data);
