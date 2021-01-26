@@ -126,8 +126,6 @@ class UploadController extends BaseController
     {
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
-        $liveId = $this->user->live_id;
-        $data['live_id'] = $liveId;
 
         $repository = new \ShopEM\Repositories\AppVersionsRepository();
         $lists = $repository->listItems($data, 10);
