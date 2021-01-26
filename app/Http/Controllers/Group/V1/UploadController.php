@@ -93,6 +93,7 @@ class UploadController extends BaseController
         if($hasVersions){
             return $this->resFailed(702, '版本号已存在');
         }
+        $data['file_name'] = $data['versions'];
         AppVersions::create($data);
 
         return $this->resSuccess();
