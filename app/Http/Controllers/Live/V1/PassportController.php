@@ -34,7 +34,7 @@ class PassportController extends BaseController
      * @param UserAccountRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(loginRequest $request)
+    public function login(Request $request)
     {
 
         $hasUser = LiveUsers::where('login_account', $request->username)->first();
