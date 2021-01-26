@@ -271,7 +271,7 @@ class LiveController extends BaseController
      */
     public function noticeAdd(Request $request)
     {
-        $data = $request->only('title','notice');
+        $data = $request->only('title','notice','img','location','wide_ratio');
         Notice::create($data);
 
         return $this->resSuccess();
@@ -290,6 +290,9 @@ class LiveController extends BaseController
         }
         $notice->title = $request->title;
         $notice->notice = $request->notice;
+        $notice->img = $request->img;
+        $notice->location = $request->location;
+        $notice->wide_ratio = $request->wide_ratio;
         $notice->save();
 
         return $this->resSuccess();
