@@ -114,4 +114,27 @@ class UploadController extends BaseController
 
         return $this->resSuccess($data);
     }
+
+    /**
+     * 获取最新apk
+     *
+     * @Author linzhe
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apkList(Request $request)
+    {
+        $data = $request->all();
+        $data['per_page'] = $data['per_page']  ?? config('app.per_page');
+        $liveId = $this->user->live_id;
+        $data['live_id'] = $liveId;
+
+        $repository = new \ShopEM\Repositories\AppVersionsRepository();
+        $lists = $repository->listItems($data, 10);
+
+        return $this->resSuccess([
+            'lists' => $lists,
+            'field' => $repository->listShowFields(),
+        ]);
+    }
 }
