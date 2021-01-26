@@ -9,7 +9,7 @@
 
 Route::namespace('ShopEM\Http\Controllers\Live\V1')->group(function () {
 
-
+  
     Route::any('anchor/login', 'PassportController@login')->name('login');  // 主播端登录
     Route::post('anchor/register', 'PassportController@register');  // 主播端注册
     Route::post('anchor/code', 'PassportController@sendLoginCode');  // 主播端验证码

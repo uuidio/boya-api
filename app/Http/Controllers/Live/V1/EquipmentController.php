@@ -404,7 +404,7 @@ class EquipmentController extends BaseController
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
 
-        $repository = new \ShopEM\Repositories\TagsImageRepository();
+        $repository = new \ShopEM\Repositories\LiveTagsImageRepository();
         $lists = $repository->listItems($data, 10);
 
         return $this->resSuccess([
