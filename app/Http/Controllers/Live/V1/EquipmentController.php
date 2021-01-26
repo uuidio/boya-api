@@ -19,6 +19,7 @@ use ShopEM\Models\Tag;
 use ShopEM\Services\Upload\UploadImage;
 use Illuminate\Support\Facades\DB;
 use ShopEM\Models\Notice;
+use ShopEM\Models\LiveTagImage;
 
 class EquipmentController extends BaseController
 {
@@ -356,6 +357,7 @@ class EquipmentController extends BaseController
 
         $repository = new \ShopEM\Repositories\TagsImageRepository();
         $lists = $repository->listItems($data, 10);
+
         return $this->resSuccess([
             'lists' => $lists,
             'field' => $repository->listShowFields(),
@@ -372,7 +374,7 @@ class EquipmentController extends BaseController
      */
     public function tagsImageStatusSave(Request $request)
     {
-        $data = $request->only('img_id','select','location');
+        $data = $request->only('img_id','img','location','select');
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
         $isTagImgge = TagImage::find($data['img_id']);
@@ -380,11 +382,35 @@ class EquipmentController extends BaseController
             return $this->resFailed(700, '数据不存在');
         }
         if($data['select'] == '1'){
-            TagImage::where('id',$data['img_id'])->update(['select'=>'1','location'=>$data['location']]);
+            LiveTagImage::create($data);
         }else{
-            TagImage::where('id',$data['img_id'])->update(['select'=>'0','location'=>'']);
+            $admin = LiveTagImage::find(intval($request->img_id));
+            $admin->delete();
         }
         return $this->resSuccess();
+    }
+
+    /**
+     * 选择素材贴纸图片列表
+     *
+     * @Author linzhe
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function liveTagsImageList(Request $request)
+    {
+        $data = $request->all();
+        $data['per_page'] = $data['per_page']  ?? config('app.per_page');
+        $liveId = $this->user->live_id;
+        $data['live_id'] = $liveId;
+
+        $repository = new \ShopEM\Repositories\TagsImageRepository();
+        $lists = $repository->listItems($data, 10);
+
+        return $this->resSuccess([
+            'lists' => $lists,
+            'field' => $repository->listShowFields(),
+        ]);
     }
 
     /**

@@ -90,6 +90,8 @@ Route::namespace('ShopEM\Http\Controllers\Live\V1')->middleware('auth:live_users
     Route::post('tag/image/delete', 'EquipmentController@tagsImageDel');    //素材分类图片删除
     Route::get('tag/image/list', 'EquipmentController@tagsImageList'); //素材分类图片列表
 
+    Route::get('liveTag/image/list', 'EquipmentController@liveTagsImageList'); //素材分类图片列表
+
     Route::post('tagImageApp/save', 'EquipmentController@tagsImageStatusSave');//app报错选中图片
     Route::get('notice/get', 'EquipmentController@notice');//app报错选中图片
 });
