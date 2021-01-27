@@ -371,7 +371,6 @@ class EquipmentController extends BaseController
         ]);
     }
 
-
     /**
      * 素材贴纸图片保存
      *
@@ -389,6 +388,7 @@ class EquipmentController extends BaseController
             return $this->resFailed(700, '数据不存在');
         }
         if($data['select'] == '1'){
+            unset($data['select']);
             LiveTagImage::create($data);
         }else{
             $admin = LiveTagImage::find(intval($request->img_id));
