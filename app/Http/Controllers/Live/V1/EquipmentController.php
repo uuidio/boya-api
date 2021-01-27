@@ -380,7 +380,7 @@ class EquipmentController extends BaseController
      */
     public function tagsImageStatusSave(Request $request)
     {
-        $data = $request->only('img_id','img','location','select');
+        $data = $request->only('img_id','img','location','select','id');
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
         $isTagImgge = TagImage::find($data['img_id']);
@@ -389,9 +389,15 @@ class EquipmentController extends BaseController
         }
         if($data['select'] == '1'){
             unset($data['select']);
+            unset($data['id']);
             LiveTagImage::create($data);
+        }elseif ($data['select'] == '2'){
+            $admin = LiveTagImage::find(intval($request->id));
+            $admin->img = $data['img'];
+            $admin->location = $data['location'];
+            $admin->save();
         }else{
-            $admin = LiveTagImage::find(intval($request->img_id));
+            $admin = LiveTagImage::find(intval($request->id));
             $admin->delete();
         }
 
