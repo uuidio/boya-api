@@ -414,6 +414,12 @@ class EquipmentController extends BaseController
 
         $repository = new \ShopEM\Repositories\LiveTagsImageRepository();
         $lists = $repository->listItems($data, 10);
+        if(!empty($lists)) {
+            foreach($lists as $key => $value){
+                $bkg = TagImage::where('id',$value['img_id'])->select('img')->first();
+                $lists[$key]['background_img'] = $bkg['img'];
+            }
+        }
 
         return $this->resSuccess([
             'lists' => $lists,
