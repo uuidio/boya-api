@@ -61,7 +61,6 @@ class CreateGoodsTable extends Migration
             $table->index('shop_id');
             $table->index('gc_id');
             $table->index('brand_id');
-            $table->index('goods_shop_cid');
             $table->index('goods_name');
         });
 

@@ -89,11 +89,12 @@ class EquipmentController extends BaseController
             $admin->delete();
             Autocue::where('cid', $request->id)->delete();
             DB::commit();
-            return $this->resSuccess();
         } catch (\Exception $exception) {
             DB::rollBack();
             return $this->resFailed(600);
         }
+
+        return $this->resSuccess();
     }
 
     /**
@@ -111,6 +112,7 @@ class EquipmentController extends BaseController
         }
         $classify->classify_name = $request->classify_name;
         $classify->save();
+
         return $this->resSuccess();
     }
 
@@ -177,6 +179,8 @@ class EquipmentController extends BaseController
             $msg = $e->getMessage();
             return $this->resFailed(700,$msg);
         }
+
+        return $this->resSuccess();
     }
 
     /**
@@ -194,10 +198,11 @@ class EquipmentController extends BaseController
                 return $this->resFailed(700, '删除的数据不存在',(Object)[]);
             }
             $admin->delete();
-            return $this->resSuccess();
         } catch (\Exception $exception) {
             return $this->resFailed(600);
         }
+
+        return $this->resSuccess();
     }
 
 
@@ -264,11 +269,12 @@ class EquipmentController extends BaseController
             $admin->delete();
             TagImage::where('tag_id', $request->id)->delete();
             DB::commit();
-            return $this->resSuccess();
         } catch (\Exception $exception) {
             DB::rollBack();
             return $this->resFailed(600);
         }
+
+        return $this->resSuccess();
     }
 
     /**
@@ -286,6 +292,7 @@ class EquipmentController extends BaseController
         }
         $tag->name = $request->name;
         $tag->save();
+
         return $this->resSuccess();
     }
 
@@ -316,7 +323,6 @@ class EquipmentController extends BaseController
         $data['img'] = $res['result']['pic_url'];
         TagImage::create($data);
 
-
         return $this->resSuccess();
     }
 
@@ -335,10 +341,11 @@ class EquipmentController extends BaseController
                 return $this->resFailed(700, '删除的数据不存在',(Object)[]);
             }
             $admin->delete();
-            return $this->resSuccess();
         } catch (\Exception $exception) {
             return $this->resFailed(600);
         }
+
+        return $this->resSuccess();
     }
 
     /**
@@ -379,7 +386,7 @@ class EquipmentController extends BaseController
         $data['live_id'] = $liveId;
         $isTagImgge = TagImage::find($data['img_id']);
         if (empty($isTagImgge)) {
-            return $this->resFailed(700, '数据不存在',(Object)[]);
+            return $this->resFailed(700, '数据不存在');
         }
         if($data['select'] == '1'){
             LiveTagImage::create($data);
@@ -387,6 +394,7 @@ class EquipmentController extends BaseController
             $admin = LiveTagImage::find(intval($request->img_id));
             $admin->delete();
         }
+
         return $this->resSuccess();
     }
 
@@ -423,6 +431,7 @@ class EquipmentController extends BaseController
     public function notice(Request $request)
     {
         $notice = Notice::orderBy('id', 'desc')->first();
+
         return $this->resSuccess($notice);
     }
 
