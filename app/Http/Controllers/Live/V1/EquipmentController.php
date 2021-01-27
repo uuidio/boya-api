@@ -418,6 +418,7 @@ class EquipmentController extends BaseController
             foreach($lists as $key => $value){
                 $bkg = TagImage::where('id',$value['img_id'])->select('img')->first();
                 $lists[$key]['background_img'] = $bkg['img'];
+                unset($bkg);
             }
         }
 
