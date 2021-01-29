@@ -1,6 +1,6 @@
 <?php
 /**
- * @Filename UploadController.php
+ * @Filename EquipmentController.php
  *
  * @Copyright       Copyright (c) 2015~2020 <http://www.shopem.cn> All rights reserved.
  * @License         Licensed <http://www.shopem.cn/licenses/>
@@ -35,7 +35,6 @@ class EquipmentController extends BaseController
     public function autocueClassifyAdd(Request $request)
     {
         $data = $request->only('classify_name');
-
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
         AutocueClassify::create($data);
@@ -243,7 +242,6 @@ class EquipmentController extends BaseController
     public function tagsAdd(Request $request)
     {
         $data = $request->only('name');
-
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
         Tag::create($data);
@@ -306,7 +304,6 @@ class EquipmentController extends BaseController
     public function tagsImageAdd(Request $request)
     {
         $data = $request->only('tag_id');
-
         $tag = Tag::find($data['tag_id']);
         if(empty($tag)) {
             return $this->resFailed(701,"贴纸分类不存在!",(Object)[]);
