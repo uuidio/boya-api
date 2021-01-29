@@ -77,7 +77,7 @@ class UploadController extends BaseController
 
         #$new = AppVersions::orderBy('id', 'desc')->first();
 
-        return $this->resSuccess('https://lanlink.smartconns.com/uploads/'.$data['url']);
+        return $this->resSuccess(env('WECHAT_APPID').'uploads/'.$data['url']);
     }
 
     /**
