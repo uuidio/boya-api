@@ -66,7 +66,6 @@ class EquipmentController extends BaseController
             'user' => '12312312312312312312'
         ]);
 
-        return '1';
 
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
