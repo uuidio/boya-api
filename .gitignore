@@ -23,5 +23,9 @@ yarn-error.log
 *.sln
 *.sw*
 
+.rnd
+.htaccess
+nginx.htaccess
 /public/uploads
-public/nginx.htaccess
+/public/nginx.htaccess
+/public/.htaccess

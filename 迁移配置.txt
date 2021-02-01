@@ -33,3 +33,13 @@ shops			- 	ego_shop_id
 goods 			-	ego_goods_id
 php artisan make:migration add_ego_old_data
 
+
+2021.2.1 添加字段
+em_autocue_classify
+    -uid    -0
+em_autocue
+    -uid    -0
+em_tags
+    -uid    -0
+em_tags_image
+    -uid    -0

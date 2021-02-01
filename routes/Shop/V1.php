@@ -7,6 +7,8 @@
  * @Author          moocde <mo@mocode.cn>
  */
 
+use Illuminate\Support\Facades\Route;
+
 Route::namespace('ShopEM\Http\Controllers\Shop\V1')->group(function () {
     // 钱包日志解析
     Route::post('wallet/fetch-log', 'WalletController@fetchPushLog');

@@ -10,6 +10,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::prefix('platform/v1')
     ->group(base_path('routes/Platform/V1.php'));
 

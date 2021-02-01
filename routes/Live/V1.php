@@ -7,6 +7,8 @@
  * @Author          linzhe
  */
 
+use Illuminate\Support\Facades\Route;
+
 Route::namespace('ShopEM\Http\Controllers\Live\V1')->group(function () {
 
 

@@ -5,6 +5,9 @@
  * @Author: nlx
  * @Date:   2020-03-02 17:47:54
  */
+
+use Illuminate\Support\Facades\Route;
+
 Route::namespace('ShopEM\Http\Controllers\Group\V1')->group(function () {
     Route::post('passport/login', 'PassportController@login')->name('group.passport.login');  // 平台后台登录
 
