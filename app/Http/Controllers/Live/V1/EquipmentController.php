@@ -37,6 +37,10 @@ class EquipmentController extends BaseController
         $data = $request->only('classify_name');
 
         \Log::info([
+            'user' => '12312312312312312312'
+        ]);
+
+        \Log::info([
             'user' => $this->user
         ]);
 
