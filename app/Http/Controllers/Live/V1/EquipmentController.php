@@ -35,7 +35,18 @@ class EquipmentController extends BaseController
     public function autocueClassifyAdd(Request $request)
     {
         $data = $request->only('classify_name');
+
+        \Log::info([
+            'user' => '12312312312312312312'
+        ]);
+
+        \Log::info([
+            'user' => $this->user
+        ]);
+
         $liveId = $this->user->live_id;
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         AutocueClassify::create($data);
 
@@ -51,9 +62,17 @@ class EquipmentController extends BaseController
      */
     public function autocueClassifyList(Request $request)
     {
+        \Log::info([
+            'user' => '12312312312312312312'
+        ]);
+
+        return '1';
+
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
         $liveId = $this->user->live_id;
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $data['live_id'] = $liveId;
 
         $repository = new \ShopEM\Repositories\AutocueClassifyRepository();
@@ -130,6 +149,8 @@ class EquipmentController extends BaseController
             return $this->resFailed(701,"提词器分类不存在!",(Object)[]);
         }
         $liveId = $this->user->live_id;
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         $data['sort'] = $data['sort'] ?? '0';
         Autocue::create($data);
@@ -149,6 +170,8 @@ class EquipmentController extends BaseController
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
         $liveId = $this->user->live_id;
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         $repository = new \ShopEM\Repositories\AutocueRepository();
         $lists = $repository->listItems($data, 10);
@@ -217,6 +240,8 @@ class EquipmentController extends BaseController
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
         $liveId = $this->user->live_id;
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         $repository = new \ShopEM\Repositories\TagsRepository();
         $lists = $repository->listItems($data, 10);
@@ -242,8 +267,13 @@ class EquipmentController extends BaseController
     public function tagsAdd(Request $request)
     {
         $data = $request->only('name');
+
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
+
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
+
         Tag::create($data);
 
         return $this->resSuccess();
@@ -315,6 +345,8 @@ class EquipmentController extends BaseController
             return $res;
         }
 
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
         $data['img'] = $res['result']['pic_url'];
@@ -356,6 +388,8 @@ class EquipmentController extends BaseController
     {
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
+        $uid = $this->user->id;
+        $data['uid'] = $uid;
         $liveId = $this->user->live_id;
         $data['live_id'] = $liveId;
 

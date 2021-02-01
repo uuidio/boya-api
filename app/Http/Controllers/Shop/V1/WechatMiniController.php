@@ -17,6 +17,7 @@ use ShopEM\Http\Requests\Shop\CheckMonileCodeRequest;
 use ShopEM\Http\Requests\Shop\SendMonileCodeRequest;
 use ShopEM\Http\Requests\Shop\WeChatMiniCreateAccountRequest;
 use ShopEM\Http\Requests\Shop\WeChatMiniOpenIdRequest;
+use ShopEM\Models\GmPlatform;
 use ShopEM\Models\Payment;
 use ShopEM\Models\RelatedLogs;
 use ShopEM\Models\Trade;
@@ -179,7 +180,8 @@ class WechatMiniController extends BaseController
 
 //        $this->getMiniDeploy($appid,$appsecret);
 
-        $param = Cache::get('gm_platform_'.$gm_id);
+        $param = GmPlatform::where('gm_id',$gm_id)->first();
+//        $param = Cache::get('gm_platform_'.$gm_id);
 
         if(empty($param)){
             throw new \Exception('配置参数异常！');
