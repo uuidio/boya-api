@@ -64,11 +64,14 @@ class AutocueRepository
     public function listItems($request)
     {
         $request['per_page'] = isset($request['per_page']) && $request['per_page'] ? $request['per_page'] : config('app.per_page');
-        $LiveUsersModel = new Autocue();
-        $LiveUsersModel = filterModel($LiveUsersModel, $this->filterables, $request);
+//        $LiveUsersModel = new Autocue();
+//        $LiveUsersModel = filterModel($LiveUsersModel, $this->filterables, $request);
 
         # $lists = $LiveUsersModel->select(listFieldToSelect($this->listShowFields()))->get()->paginate($request['per_page']);
-        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
+//        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
+
+
+        $lists = Autocue::where('uid',$request['uid'])->orderBy('id', 'desc')->paginate($request['per_page']);
 
         return $lists;
     }

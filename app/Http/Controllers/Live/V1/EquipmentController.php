@@ -35,15 +35,6 @@ class EquipmentController extends BaseController
     public function autocueClassifyAdd(Request $request)
     {
         $data = $request->only('classify_name');
-
-        \Log::info([
-            'user' => '12312312312312312312'
-        ]);
-
-        \Log::info([
-            'user' => $this->user
-        ]);
-
         $liveId = $this->user->live_id;
         $uid = $this->user->id;
         $data['uid'] = $uid;
@@ -62,11 +53,6 @@ class EquipmentController extends BaseController
      */
     public function autocueClassifyList(Request $request)
     {
-        \Log::info([
-            'user' => '12312312312312312312'
-        ]);
-
-
         $data = $request->all();
         $data['per_page'] = $data['per_page']  ?? config('app.per_page');
         $liveId = $this->user->live_id;
@@ -75,7 +61,7 @@ class EquipmentController extends BaseController
         $data['live_id'] = $liveId;
 
         $repository = new \ShopEM\Repositories\AutocueClassifyRepository();
-        $lists = $repository->listItems($data, 10);
+        $lists = $repository->listItems($data);
         if(!empty($lists)) {
             foreach($lists as $key => $value){
                 $lists[$key]['count'] = Autocue::where('cid', $value['id'])->count();
@@ -173,7 +159,7 @@ class EquipmentController extends BaseController
         $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         $repository = new \ShopEM\Repositories\AutocueRepository();
-        $lists = $repository->listItems($data, 10);
+        $lists = $repository->listItems($data);
 
         return $this->resSuccess([
             'lists' => $lists,
@@ -243,7 +229,7 @@ class EquipmentController extends BaseController
         $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         $repository = new \ShopEM\Repositories\TagsRepository();
-        $lists = $repository->listItems($data, 10);
+        $lists = $repository->listItems($data);
         if(!empty($lists)) {
             foreach($lists as $key => $value){
                 $lists[$key]['count'] = TagImage::where('tag_id', $value['id'])->count();
@@ -393,7 +379,7 @@ class EquipmentController extends BaseController
         $data['live_id'] = $liveId;
 
         $repository = new \ShopEM\Repositories\TagsImageRepository();
-        $lists = $repository->listItems($data, 10);
+        $lists = $repository->listItems($data);
 
         return $this->resSuccess([
             'lists' => $lists,

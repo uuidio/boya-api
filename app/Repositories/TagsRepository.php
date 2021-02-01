@@ -20,7 +20,7 @@ class TagsRepository
      * 定义搜索过滤字段
      */
     protected $filterables = [
-        'live_id'            => ['field' => 'live_id', 'operator' => '='],
+        'live_id' => ['field' => 'live_id', 'operator' => '='],
     ];
 
     /**
@@ -60,11 +60,12 @@ class TagsRepository
     public function listItems($request)
     {
         $request['per_page'] = isset($request['per_page']) && $request['per_page'] ? $request['per_page'] : config('app.per_page');
-        $LiveUsersModel = new Tag();
-        $LiveUsersModel = filterModel($LiveUsersModel, $this->filterables, $request);
+//        $LiveUsersModel = new Tag();
+//        $LiveUsersModel = filterModel($LiveUsersModel, $this->filterables, $request);
 
-       # $lists = $LiveUsersModel->select(listFieldToSelect($this->listShowFields()))->get()->paginate($request['per_page']);
-        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
+        # $lists = $LiveUsersModel->select(listFieldToSelect($this->listShowFields()))->get()->paginate($request['per_page']);
+//        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
+        $lists = Tag::where('uid', $request['uid'])->orderBy('id', 'desc')->paginate($request['per_page']);
 
         return $lists;
     }

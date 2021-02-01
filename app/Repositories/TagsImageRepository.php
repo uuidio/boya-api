@@ -20,9 +20,9 @@ class TagsImageRepository
      * 定义搜索过滤字段
      */
     protected $filterables = [
-        'live_id'            => ['field' => 'live_id', 'operator' => '='],
-        'tag_id'            => ['field' => 'tag_id', 'operator' => '='],
-        'select'            => ['field' => 'select', 'operator' => '='],
+        'live_id' => ['field' => 'live_id', 'operator' => '='],
+        'tag_id' => ['field' => 'tag_id', 'operator' => '='],
+        'select' => ['field' => 'select', 'operator' => '='],
     ];
 
     /**
@@ -61,11 +61,12 @@ class TagsImageRepository
     public function listItems($request)
     {
         $request['per_page'] = isset($request['per_page']) && $request['per_page'] ? $request['per_page'] : config('app.per_page');
-        $LiveUsersModel = new TagImage();
-        $LiveUsersModel = filterModel($LiveUsersModel, $this->filterables, $request);
+//        $LiveUsersModel = new TagImage();
+//        $LiveUsersModel = filterModel($LiveUsersModel, $this->filterables, $request);
 
-       # $lists = $LiveUsersModel->select(listFieldToSelect($this->listShowFields()))->get()->paginate($request['per_page']);
-        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
+        # $lists = $LiveUsersModel->select(listFieldToSelect($this->listShowFields()))->get()->paginate($request['per_page']);
+//        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
+        $lists = TagImage::where('uid', $request['uid'])->orderBy('id', 'desc')->paginate($request['per_page']);
 
         return $lists;
     }
