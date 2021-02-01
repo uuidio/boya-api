@@ -36,6 +36,10 @@ class EquipmentController extends BaseController
     {
         $data = $request->only('classify_name');
 
+        \Log::info([
+            'user' => $this->user
+        ]);
+        
         $liveId = $this->user->live_id;
         $uid = $this->user->id;
         $data['uid'] = $uid;
