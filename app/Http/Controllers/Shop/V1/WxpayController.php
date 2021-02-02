@@ -228,10 +228,10 @@ class WxpayController extends BaseController
      * @Author moocde <mo@mocode.cn>
      * @return string
      */
-    public function notify()
+    public function notify(Request $request)
     {
         \Log::info([
-            'input' =>request()->input()
+            'input' =>$request->input()
         ]);
 
         $pay = Pay::wechat();
