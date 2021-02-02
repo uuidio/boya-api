@@ -119,7 +119,10 @@ class LiveController extends BaseController
         $platform_id = $this->platform->id;
         $lists = DB::table('shops')->where('gm_id', $platform_id)->select(['id', 'shop_name'])->get();
 
-        return $lists;
+        return $this->resSuccess([
+            'lists' => $lists,
+        ]);
+
     }
 
     /**
