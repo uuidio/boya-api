@@ -52,14 +52,14 @@ class PassportController extends BaseController
             }
         }
 
-//        if (!Hash::check($request->password, $user->password)) {
-//            return $this->resFailed(402);
-//        }
-//
-//        $token = $this->authenticate('group_users');
-//        if (!$token) {
-//            return $this->resFailed(402);
-//        }
+        if (!Hash::check($request->password, $user->password)) {
+            return $this->resFailed(402);
+        }
+
+        $token = $this->authenticate('group_users');
+        if (!$token) {
+            return $this->resFailed(402);
+        }
 
         $menuIds = GroupRoleMenu::where('role_id', $user->role_id)->pluck('menu_id');
         $rule = [];
