@@ -319,9 +319,11 @@ class GoodsService
         if (isset($data['spec'])) {
             unset($data['spec']);
         }
-//        if (isset($data['goods_shop_cid'])) {
-//            $data['goods_shop_cid'] = serialize($data['goods_shop_cid']);
-//        }
+        if (isset($data['goods_shop_cid'])) {
+            //$data['goods_shop_cid'] = serialize($data['goods_shop_cid']);
+            unset($data['goods_shop_cid']);
+        }
+
         //属性
         if (isset($data['goods_attr'])) {
             $data['goods_attr'] = serialize($data['goods_attr']);
