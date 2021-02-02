@@ -88,7 +88,7 @@ class LiveUsersRepository
 
         $per_page = request()->input('per_page', config('app.per_page'));
 
-        $lists = LiveUsers::where('platform_id',$platform_id)
+        $lists = LiveUsers::where('platform_id', $platform_id)
             ->when($searchUsername, function (Builder $builder) use ($searchUsername) {
                 $builder->where('username', 'like', '%' . $searchUsername . '%');
             })
@@ -107,8 +107,8 @@ class LiveUsersRepository
         if ($lists->isNotEmpty()) {
             foreach ($lists->items() as &$item) {
                 $item->account_end_time = !empty($item->account_end_time) ? date('Y-m-d', $item->account_end_time) : '-';
-                $item->platform_name = DB::table('gm_platforms')->where('gm_id',$item->platform_id)->value('platform_name');
-                $item->shop_name = DB::table('shops')->where('id',$item->shop_id)->value('shop_name');
+                $item->platform_name = DB::table('gm_platforms')->where('gm_id', $item->platform_id)->value('platform_name');
+                $item->shop_name = DB::table('shops')->where('id', $item->shop_id)->value('shop_name');
             }
         }
 
@@ -128,8 +128,17 @@ class LiveUsersRepository
         $searchMobile = request()->input('mobile');
         //是否绑定品牌
         $searchIsBindPlatform = request()->input('bind_platform'); //-1未绑定 0全部 1已绑定
+
         //门店
         $searchShopId = request()->input('shop_id');
+
+        //品牌
+        $searchPlatformId = request()->input('platform_id');
+        $searchShopIds = [];
+        if ($searchPlatformId && empty($searchShopId)) {
+            $shops = DB::table('shops')->where('gm_id', $searchPlatformId)->get()->toArray();
+            if($shops) $searchShopIds = array_column($shops,'id');
+        }
 
         $per_page = request()->input('per_page', config('app.per_page'));
 
@@ -144,6 +153,9 @@ class LiveUsersRepository
                 if ($searchIsBindPlatform == -1) $builder->where('platform_id', 0);
                 if ($searchIsBindPlatform == 1) $builder->where('platform_id', '>', 0);
             })
+            ->when($searchShopIds, function (Builder $builder) use ($searchShopIds) {
+                $builder->whereIn('shop_id', $searchShopIds);
+            })
             ->when($searchShopId, function (Builder $builder) use ($searchShopId) {
                 $builder->where('shop_id', $searchShopId);
             })
@@ -156,8 +168,8 @@ class LiveUsersRepository
         if ($lists->isNotEmpty()) {
             foreach ($lists->items() as &$item) {
                 $item->account_end_time = !empty($item->account_end_time) ? date('Y-m-d', $item->account_end_time) : '-';
-                $item->platform_name = DB::table('gm_platforms')->where('gm_id',$item->platform_id)->value('platform_name');
-                $item->shop_name = DB::table('shops')->where('id',$item->shop_id)->value('shop_name');
+                $item->platform_name = DB::table('gm_platforms')->where('gm_id', $item->platform_id)->value('platform_name');
+                $item->shop_name = DB::table('shops')->where('id', $item->shop_id)->value('shop_name');
             }
         }
 
