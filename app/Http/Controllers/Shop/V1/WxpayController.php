@@ -142,18 +142,18 @@ class WxpayController extends BaseController
             throw new \Exception('支付参数异常！');
         }
 
-        \Log::info(
-            [
-                '$param' =>$param
-            ]
-        );
-
-
         /*$appid = env('WECHAT_MINI_APPID');
         $appsecret = env('WECHAT_MINI_APPSECRET');*/
 
         $appid = $param['mini_appid'];
         $appsecret =$param['mini_secret'];
+
+        \Log::info(
+            [
+                '$appid' =>$appid,
+                '$appsecret' =>$appsecret
+            ]
+        );
 
         try {
             Payment::where('payment_id', $request->payment_id)->update(['pay_app' => 'Wxpaymini', 'appid'=>$appid ]);
