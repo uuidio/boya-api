@@ -205,7 +205,11 @@ class WxpayController extends BaseController
         $mini = new \ShopEM\Services\Payment\Wxpaymini($gm_id);
         //获取openid
         $jscode_res = $mini->getOpenId($request->code, $appid, $appsecret);
-
+        \Log::info(
+            [
+                '$jscode_res' =>$jscode_res
+            ]
+        );
         $pay_params = [
             'payment_id' => $payment_info->payment_id,
             'openid'     => $jscode_res['openid'],
@@ -214,6 +218,12 @@ class WxpayController extends BaseController
             'body_title'  => $param['platform_name'],
             'app_url'  => $param['app_url'],
         ];
+        \Log::info(
+            [
+                '$pay_params' =>$pay_params
+            ]
+        );
+
         // testLog($pay_params);
         $pay_info = $mini->wxpay_native($pay_params);
         return  $this->resSuccess($pay_info);
