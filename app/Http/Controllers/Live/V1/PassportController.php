@@ -47,7 +47,7 @@ class PassportController extends BaseController
         if (!$token) {
             return $this->resFailed(402,'用户名或密码错误',(Object)[]);
         }
-        $expiration = date('Y-m-d H:i:s',strtotime('+1year', strtotime($hasUser['created_at'])));//
+        $expiration = date('Y-m-d',strtotime('+1year', strtotime($hasUser['created_at'])));//
         $token['expiration'] = $expiration;
         $token['username'] = $hasUser['username'];
         return $this->resSuccess($token);
