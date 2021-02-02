@@ -148,13 +148,6 @@ class WxpayController extends BaseController
         $appid = $param['mini_appid'];
         $appsecret =$param['mini_secret'];
 
-        \Log::info(
-            [
-                '$appid' =>$appid,
-                '$appsecret' =>$appsecret
-            ]
-        );
-
         try {
             Payment::where('payment_id', $request->payment_id)->update(['pay_app' => 'Wxpaymini', 'appid'=>$appid ]);
         } catch (\Exception $e) {
@@ -212,11 +205,7 @@ class WxpayController extends BaseController
         $mini = new \ShopEM\Services\Payment\Wxpaymini($gm_id);
         //获取openid
         $jscode_res = $mini->getOpenId($request->code, $appid, $appsecret);
-        \Log::info(
-            [
-                '$jscode_res' =>$jscode_res
-            ]
-        );
+
         $pay_params = [
             'payment_id' => $payment_info->payment_id,
             'openid'     => $jscode_res['openid'],
@@ -225,11 +214,6 @@ class WxpayController extends BaseController
             'body_title'  => $param['platform_name'],
             'app_url'  => $param['app_url'],
         ];
-        \Log::info(
-            [
-                '$pay_params' =>$pay_params
-            ]
-        );
 
         // testLog($pay_params);
         $pay_info = $mini->wxpay_native($pay_params);
@@ -246,9 +230,15 @@ class WxpayController extends BaseController
      */
     public function notify()
     {
+        \Log::info('微信支付异步通知处理+++');
+
         $pay = Pay::wechat();
         try {
             $data = $pay->verify();
+            \Log::info([
+                '$data' =>$data
+            ]);
+
             $payment_info = Payment::where('payment_id', $data->out_trade_no)->first();
             if (!$payment_info) {
                 return 'fail';
