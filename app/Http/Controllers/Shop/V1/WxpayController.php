@@ -230,15 +230,13 @@ class WxpayController extends BaseController
      */
     public function notify()
     {
-        \Log::info('微信支付异步通知处理+++');
+        \Log::info([
+            'input' =>request()->input()
+        ]);
 
         $pay = Pay::wechat();
         try {
             $data = $pay->verify();
-            \Log::info([
-                '$data' =>$data
-            ]);
-
             $payment_info = Payment::where('payment_id', $data->out_trade_no)->first();
             if (!$payment_info) {
                 return 'fail';
