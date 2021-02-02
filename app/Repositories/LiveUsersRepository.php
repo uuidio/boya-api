@@ -77,6 +77,12 @@ class LiveUsersRepository
         return $lists;
     }
 
+    /**
+     * 主播列表-品牌端
+     *
+     * @param $platform_id
+     * @return mixed
+     */
     public function platformGetUserList($platform_id)
     {
         //主播名称
@@ -128,10 +134,8 @@ class LiveUsersRepository
         $searchMobile = request()->input('mobile');
         //是否绑定品牌
         $searchIsBindPlatform = request()->input('bind_platform'); //-1未绑定 0全部 1已绑定
-
         //门店
         $searchShopId = request()->input('shop_id');
-
         //品牌
         $searchPlatformId = request()->input('platform_id');
         $searchShopIds = [];
