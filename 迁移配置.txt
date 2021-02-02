@@ -43,3 +43,7 @@ em_tags
     -uid    -0
 em_tags_image
     -uid    -0
+
+2021.2.2
+em_live_users
+    -account_end_time   -0  账号过期时间

@@ -310,6 +310,11 @@ Route::namespace('ShopEM\Http\Controllers\Platform\V1')->middleware('auth:admin_
     /**
      * 直播模块
      */
+
+    Route::get('live/user/list', 'LiveController@userList')->name('platformslive.user.live');    //主播列表
+    Route::get('live/platforms/shops', 'LiveController@platformsShops')->name('platformslive.platforms.shops');    //品牌下的所有门店
+    Route::post('live/shop/binding', 'LiveController@bindingShop')->name('platformslive.shop.binding');    //主播绑定门店
+
     Route::post('live/add', 'LiveController@addLive')->name('live.add');    // 添加商户直播间
     Route::post('live/update', 'LiveController@updateLive')->name('live.update');    // 添加商户直播间
     Route::get('live/list', 'LiveController@listLive')->name('live.list');    // 添加商户直播间

@@ -32,4 +32,21 @@ class LiveUsers extends Authenticatable
     {
         return $this->where('login_account', $username)->first();
     }
+
+    /**
+     * 品牌
+     */
+    public function hasPlatform()
+    {
+        return $this->hasOne(GmPlatform::class,'gm_id','platform_id');
+    }
+
+    /**
+     * 门店
+     */
+    public function hasShop()
+    {
+       return $this->hasOne(Shop::class,'id','shop_id');
+
+    }
 }

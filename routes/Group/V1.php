@@ -58,6 +58,7 @@ Route::namespace('ShopEM\Http\Controllers\Group\V1')->middleware('auth:group_use
     Route::post('album/del-url', 'AlbumController@delByUrl')->name('group.album.del-url');  // 根据url删除图片
 
     Route::get('live/user/list', 'LiveController@userList')->name('live.user.live');    //主播列表
+    Route::get('live/platforms/shops', 'LiveController@platformsShops')->name('live.platforms.shops');    //品牌下的所有门店
     Route::post('live/platform/binding', 'LiveController@bindingPlatform')->name('live.platform.binding');    //主播绑定品牌店
 
     Route::post('live/notice/add', 'LiveController@noticeAdd')->name('live.noticeAdd');    //
