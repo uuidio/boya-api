@@ -28,8 +28,8 @@ use ShopEM\Services\Payment\Wxpaywap;
 use ShopEM\Services\Payment\Wxpaymini;
 use ShopEM\Services\PaymentService;
 use Illuminate\Support\Facades\Cache;
-use Pay;
 use ShopEM\Services\WeChatMini\WXMessage;
+use Yansongda\Pay\Pay;
 
 class WxpayController extends BaseController
 {
@@ -201,7 +201,7 @@ class WxpayController extends BaseController
         }
 
 
-        $mini = new \ShopEM\Services\Payment\Wxpaymini($gm_id);
+        $mini = new Wxpaymini($gm_id);
         //获取openid
         $jscode_res = $mini->getOpenId($request->code, $appid, $appsecret);
 
@@ -220,14 +220,6 @@ class WxpayController extends BaseController
         // return $this->resSuccess(['url'=>(new PayService())->getPayConfig($payment_info)]);
     }
 
-    function xmlToArray($xml)
-    {
-        //禁止引用外部xml实体
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        return $values;
-    }
-
 
     /**
      * 微信支付异步通知处理
@@ -240,6 +232,7 @@ class WxpayController extends BaseController
 
         $xml = request()->getContent();
         $res = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+
         /*'appid' => 'wx73ee4967b3ffe51b',
         'attach' => '播丫',
         'bank_type' => 'OTHERS',
@@ -260,12 +253,12 @@ class WxpayController extends BaseController
 
         try {
             $gm_id = DB::table('payments')->where('payment_id', $res['out_trade_no'])->value('gm_id');
-            $wxmini = new Wxpaymini($gm_id);
-            $pay = Pay::wechat($wxmini->payConfig);
+            $mini = new Wxpaymini($gm_id);
+            $pay = Pay::wechat($mini->payConfig);
 
             \Log::info([
                 '$gm_id' => $gm_id,
-                'payConfig' => $wxmini->payConfig
+                '回调payConfig' => $mini->payConfig
             ]);
 
             $data = $pay->verify();
