@@ -236,7 +236,7 @@ class WxpayController extends BaseController
 
         $xml = $request->getContent();
 
-        $xml = simplexml_load_string($xml); //xml转object
+        $xml = simplexml_load_string($xml,LIBXML_NOCDATA); //xml转object
         $xml = json_encode($xml);  //objecct转json
         $res = json_decode($xml, true); //json转array
 
