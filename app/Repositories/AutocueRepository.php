@@ -9,6 +9,7 @@
 
 namespace ShopEM\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use ShopEM\Models\Autocue;
@@ -20,8 +21,8 @@ class AutocueRepository
      * 定义搜索过滤字段
      */
     protected $filterables = [
-        'live_id'            => ['field' => 'live_id', 'operator' => '='],
-        'cid'            => ['field' => 'cid', 'operator' => '='],
+        'live_id' => ['field' => 'live_id', 'operator' => '='],
+        'cid' => ['field' => 'cid', 'operator' => '='],
     ];
 
     /**
@@ -71,7 +72,12 @@ class AutocueRepository
 //        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
 
 
-        $lists = Autocue::where('uid',$request['uid'])->orderBy('id', 'desc')->paginate($request['per_page']);
+        $lists = Autocue::where('uid', $request['uid'])
+            ->when(!empty($request['cid']), function (Builder $builder) use ($request) {
+                $builder->where('cid', $request['cid']);
+            })
+            ->where('uid', $request['uid'])
+            ->orderBy('id', 'desc')->paginate($request['per_page']);
 
         return $lists;
     }
