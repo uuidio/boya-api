@@ -219,6 +219,21 @@ class WxpayController extends BaseController
         // return $this->resSuccess(['url'=>(new PayService())->getPayConfig($payment_info)]);
     }
 
+    function xmlToArray($xml)
+    {
+        //禁止引用外部xml实体
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        return $values;
+    }
+
+    function xmlToArray2($xml)
+    {
+        //禁止引用外部xml实体
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        return $values;
+    }
 
     /**
      * 微信支付异步通知处理
@@ -229,19 +244,14 @@ class WxpayController extends BaseController
     public function notify(Request $request)
     {
 
-
-        \Log::info([
-            'getContent' => $request->getContent()
-        ]);
-
         $xml = $request->getContent();
 
-        $xml = simplexml_load_string($xml,LIBXML_NOCDATA); //xml转object
-        $xml = json_encode($xml);  //objecct转json
-        $res = json_decode($xml, true); //json转array
+        $a = $this->xmlToArray($xml);
+        $a2 = $this->xmlToArray2($xml);
 
         \Log::info([
-            '$res' => $res
+            '$a' =>$a,
+            '$a2' =>$a2,
         ]);
 
         $pay = Pay::wechat();
