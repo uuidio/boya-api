@@ -264,7 +264,8 @@ class WxpayController extends BaseController
             $pay = Pay::wechat($wxmini->payConfig);
 
             \Log::info([
-                '$pay' => $pay
+                '$gm_id' => $gm_id,
+                'payConfig' => $wxmini->payConfig
             ]);
 
             $data = $pay->verify();
