@@ -10,6 +10,7 @@
 namespace ShopEM\Http\Controllers\Shop\V1;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use ShopEM\Http\Controllers\Shop\BaseController;
@@ -227,13 +228,6 @@ class WxpayController extends BaseController
         return $values;
     }
 
-    function xmlToArray2($xml)
-    {
-        //禁止引用外部xml实体
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        return $values;
-    }
 
     /**
      * 微信支付异步通知处理
@@ -241,21 +235,38 @@ class WxpayController extends BaseController
      * @Author moocde <mo@mocode.cn>
      * @return string
      */
-    public function notify(Request $request)
+    public function notify()
     {
 
-        $xml = $request->getContent();
+        $xml = request()->getContent();
+        $res = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        /*'appid' => 'wx73ee4967b3ffe51b',
+        'attach' => '播丫',
+        'bank_type' => 'OTHERS',
+        'cash_fee' => '1',
+        'fee_type' => 'CNY',
+        'is_subscribe' => 'N',
+        'mch_id' => '1605971434',
+        'nonce_str' => '0RkJNuLNaOx6XH5e',
+        'openid' => 'oC4qE4qI6yWAMiiYUnxKgGV2Kkyw',
+        'out_trade_no' => '630000000999999210203100457527',
+        'result_code' => 'SUCCESS',
+        'return_code' => 'SUCCESS',
+        'sign' => 'F14C183F1810DC57B734C464EE2FCD16',
+        'time_end' => '20210203100502',
+        'total_fee' => '1',
+        'trade_type' => 'JSAPI',
+        'transaction_id' => '4200000802202102033967198634',*/
 
-        $a = $this->xmlToArray($xml);
-        $a2 = $this->xmlToArray2($xml);
-
-        \Log::info([
-            '$a' =>$a,
-            '$a2' =>$a2,
-        ]);
-
-        $pay = Pay::wechat();
         try {
+            $gm_id = DB::table('payments')->where('payment_id', $res['out_trade_no'])->value('gm_id');
+            $wxmini = new Wxpaymini($gm_id);
+            $pay = Pay::wechat($wxmini->payConfig);
+
+            \Log::info([
+                '$pay' => $pay
+            ]);
+
             $data = $pay->verify();
             $payment_info = Payment::where('payment_id', $data->out_trade_no)->first();
             if (!$payment_info) {
