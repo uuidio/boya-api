@@ -57,9 +57,9 @@ class WxpayController extends BaseController
 
         $pay_params = [
             'payment_id' => $payment_info->payment_id,
-            'body'       => 'shopem bbc',
-            'amount'     => $payment_info->amount,
-            'open_id'    => $request->session()->get('openid'),
+            'body' => 'shopem bbc',
+            'amount' => $payment_info->amount,
+            'open_id' => $request->session()->get('openid'),
         ];
 
         $pay_info = Wxpayjsapi::makeJsPay($pay_params);
@@ -105,13 +105,13 @@ class WxpayController extends BaseController
         }
         $pay_params = [
             'payment_id' => $payment_info->payment_id,
-            'body'       => '宝能电商平台',
-            'amount'     => $payment_info->amount,
+            'body' => '宝能电商平台',
+            'amount' => $payment_info->amount,
         ];
         $data = [
             'out_trade_no' => $pay_params['payment_id'],
-            'body'         => $pay_params['body'],
-            'total_fee'    => $pay_params['amount'] * 100,
+            'body' => $pay_params['body'],
+            'total_fee' => $pay_params['amount'] * 100,
         ];
         // Pay::wechat()->wap($data);
         return Pay::wechat()->wap($data);
@@ -135,10 +135,10 @@ class WxpayController extends BaseController
 
         $payment_info = Payment::where('payment_id', $request->payment_id)->first();
 
-        $gm_id=$payment_info['gm_id'];
-        $param = Cache::get('gm_platform_'.$gm_id);
+        $gm_id = $payment_info['gm_id'];
+        $param = Cache::get('gm_platform_' . $gm_id);
 
-        if(empty($param)){
+        if (empty($param)) {
             throw new \Exception('支付参数异常！');
         }
 
@@ -146,55 +146,53 @@ class WxpayController extends BaseController
         $appsecret = env('WECHAT_MINI_APPSECRET');*/
 
         $appid = $param['mini_appid'];
-        $appsecret =$param['mini_secret'];
+        $appsecret = $param['mini_secret'];
 
         try {
-            Payment::where('payment_id', $request->payment_id)->update(['pay_app' => 'Wxpaymini', 'appid'=>$appid ]);
+            Payment::where('payment_id', $request->payment_id)->update(['pay_app' => 'Wxpaymini', 'appid' => $appid]);
         } catch (\Exception $e) {
             throw new \Exception('微信小程序：' . $e->getMessage());
         }
 
-        $redis= new Redis();
-        $group_payment_key= 'group_pay_'.$request->payment_id;
-        $group_payment=$redis::get($group_payment_key);
-        if($group_payment){
-            $group_payment=json_decode($group_payment, true);
+        $redis = new Redis();
+        $group_payment_key = 'group_pay_' . $request->payment_id;
+        $group_payment = $redis::get($group_payment_key);
+        if ($group_payment) {
+            $group_payment = json_decode($group_payment, true);
 
-            if($group_payment['set_type'] =='group'){
+            if ($group_payment['set_type'] == 'group') {
                 $key_group = $group_payment['user_id'] . 'group' . $request->payment_id;
-                $start_group=$redis::get($key_group);
-                if(empty($start_group)){
+                $start_group = $redis::get($key_group);
+                if (empty($start_group)) {
                     throw new \Exception("团购已经过期,请勿支付!!");
                 }
-            }else{
+            } else {
                 $key_group = $group_payment['user_id'] . 'groupjoin' . $request->payment_id;
-                $join_group=$redis::get($key_group);
-                if(empty($join_group)){
+                $join_group = $redis::get($key_group);
+                if (empty($join_group)) {
                     throw new \Exception("跟团已经过期,请勿支付!!");
                 }
             }
         }
 
         $tid = TradePaybill::where('payment_id', $payment_info->payment_id)->value('tid');
-        $tradeOrder = TradeOrder::where(['activity_type'=>'point_goods','tid'=>$tid])->select('user_id','activity_sign','quantity')->latest()->first();
-        if ($tradeOrder)
-        {
+        $tradeOrder = TradeOrder::where(['activity_type' => 'point_goods', 'tid' => $tid])->select('user_id', 'activity_sign', 'quantity')->latest()->first();
+        if ($tradeOrder) {
             $point_goods = \ShopEM\Models\PointActivityGoods::where('id', $tradeOrder->activity_sign)->first();
             if (!$point_goods) {
                 throw new \Exception('积分活动已结束');
             }
             //积分商品限制判断
             $pointGoodsObj = new \ShopEM\Services\Marketing\PointGoods;
-            $check = $pointGoodsObj->buyCheck($tradeOrder->user_id,$point_goods,$tradeOrder->quantity);
-            if (isset($check['code']) && $check['code']>0) {
+            $check = $pointGoodsObj->buyCheck($tradeOrder->user_id, $point_goods, $tradeOrder->quantity);
+            if (isset($check['code']) && $check['code'] > 0) {
                 throw new \Exception($check['msg']);
             }
         }
         //避免秒杀订单支付时被关掉做一个时间限制。
         ###注意这个时间跟秒杀关闭时间有关系。当前5分钟关闭
-        $seckill_created_at = Trade::where('tid',$tid)->where('activity_sign','seckill')->value('created_at');
-        if ($seckill_created_at) 
-        {
+        $seckill_created_at = Trade::where('tid', $tid)->where('activity_sign', 'seckill')->value('created_at');
+        if ($seckill_created_at) {
             //4分30秒  = 4*60
             if (time() - strtotime($seckill_created_at) >= 240 + 30) {
                 throw new \Exception("秒杀已经过期,请勿支付!!");
@@ -208,16 +206,16 @@ class WxpayController extends BaseController
 
         $pay_params = [
             'payment_id' => $payment_info->payment_id,
-            'openid'     => $jscode_res['openid'],
-            'total_fee'  => $payment_info->amount,
+            'openid' => $jscode_res['openid'],
+            'total_fee' => $payment_info->amount,
 //            'attach'  => $param['platform_name'],
-            'body_title'  => $param['platform_name'],
-            'app_url'  => $param['app_url'],
+            'body_title' => $param['platform_name'],
+            'app_url' => $param['app_url'],
         ];
 
         // testLog($pay_params);
         $pay_info = $mini->wxpay_native($pay_params);
-        return  $this->resSuccess($pay_info);
+        return $this->resSuccess($pay_info);
         // return $this->resSuccess(['url'=>(new PayService())->getPayConfig($payment_info)]);
     }
 
@@ -230,12 +228,20 @@ class WxpayController extends BaseController
      */
     public function notify(Request $request)
     {
-        \Log::info([
-            'input' =>$request->input()
-        ]);
+
 
         \Log::info([
-            'getContent' =>$request->getContent()
+            'getContent' => $request->getContent()
+        ]);
+
+        $xml = $request->getContent();
+
+        $xml = simplexml_load_string($xml); //xml转object
+        $xml = json_encode($xml);  //objecct转json
+        $res = json_decode($xml, true); //json转array
+
+        \Log::info([
+            '$res' => $res
         ]);
 
         $pay = Pay::wechat();
@@ -259,9 +265,8 @@ class WxpayController extends BaseController
         $tradePaybill = TradePaybill::where('payment_id', $payment_info->payment_id)->first();
         $trade = Trade::where('tid', $tradePaybill->tid)->first();
         #如果是系统自动关闭的订单，支付成功的要自动退款
-        if ($trade && $trade->status == Trade::TRADE_CLOSED_BY_SYSTEM) 
-        {
-            (new PaymentService)->systemDoRefund($payment_data,$payment_info);
+        if ($trade && $trade->status == Trade::TRADE_CLOSED_BY_SYSTEM) {
+            (new PaymentService)->systemDoRefund($payment_data, $payment_info);
             return $pay->success();
             exit;
         }
@@ -271,7 +276,7 @@ class WxpayController extends BaseController
             exit;
         }
 
-        $payment_data['user_id']=$payment_info->user_id;
+        $payment_data['user_id'] = $payment_info->user_id;
 
         PaymentService::paySuccess($payment_data, '');
 
