@@ -138,6 +138,10 @@ class EquipmentController extends BaseController
         $data['uid'] = $uid;
         $data['live_id'] = $liveId;
         $data['sort'] = $data['sort'] ?? '0';
+        $data['antistop_one'] =  $data['antistop_one'] ?? '';
+        $data['antistop_two'] =  $data['antistop_two'] ?? '';
+        $data['antistop_three'] =  $data['antistop_three'] ?? '';
+        
         Autocue::create($data);
 
         return $this->resSuccess();
