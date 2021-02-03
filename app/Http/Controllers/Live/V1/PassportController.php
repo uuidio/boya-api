@@ -47,7 +47,12 @@ class PassportController extends BaseController
         if (!$token) {
             return $this->resFailed(402, '用户名或密码错误', (object)[]);
         }
-        $expiration = date('Y-m-d', strtotime('+1year', strtotime($hasUser['created_at'])));//
+        if (empty($hasUser['account_end_time'])) {
+            $expiration = date('Y-m-d', strtotime('+1year', strtotime($hasUser['created_at'])));
+        } else {
+            $expiration = date('Y-m-d', $hasUser['account_end_time']);
+        }
+
         $token['expiration'] = $expiration;
         $token['username'] = $hasUser['username'];
         return $this->resSuccess($token);
@@ -117,7 +122,7 @@ class PassportController extends BaseController
         }
 
         $user = LiveUsers::where('login_account', $input_data['login_account'])->first();
-        if($user){
+        if ($user) {
             return $this->resFailed(702, '该手机号码已经注册');
         }
 
