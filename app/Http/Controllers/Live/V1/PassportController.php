@@ -40,14 +40,14 @@ class PassportController extends BaseController
         $hasUser = LiveUsers::where('login_account', $request->username)->first();
 
         if (empty($hasUser)) {
-            return $this->resFailed(402,'用户名或密码错误',(Object)[]);
+            return $this->resFailed(402, '用户名或密码错误', (object)[]);
         }
         $token = $this->authenticate('live_users');
 
         if (!$token) {
-            return $this->resFailed(402,'用户名或密码错误',(Object)[]);
+            return $this->resFailed(402, '用户名或密码错误', (object)[]);
         }
-        $expiration = date('Y-m-d',strtotime('+1year', strtotime($hasUser['created_at'])));//
+        $expiration = date('Y-m-d', strtotime('+1year', strtotime($hasUser['created_at'])));//
         $token['expiration'] = $expiration;
         $token['username'] = $hasUser['username'];
         return $this->resSuccess($token);
@@ -62,13 +62,13 @@ class PassportController extends BaseController
     {
         $token = Auth::guard('live_users')->user()->token()->toArray();
         $live_id = $this->user->live_id;
-        $token_id = LiveUsers::where('id',$live_id)->select('oauth_access_token_id')->first();
-        if($token_id['oauth_access_token_id']){
+        $token_id = LiveUsers::where('id', $live_id)->select('oauth_access_token_id')->first();
+        if ($token_id['oauth_access_token_id']) {
             OauthAccessTokens::where('id', $token_id['oauth_access_token_id'])->delete();
-            OauthAccessTokenProviders::where('oauth_access_token_id',$token_id['oauth_access_token_id'])->delete();
+            OauthAccessTokenProviders::where('oauth_access_token_id', $token_id['oauth_access_token_id'])->delete();
             OauthRefreshTokens::where('access_token_id', $token_id['oauth_access_token_id'])->delete();
         }
-        LiveUsers::where('id',$live_id)->update(['oauth_access_token_id'=>$token['id']]);
+        LiveUsers::where('id', $live_id)->update(['oauth_access_token_id' => $token['id']]);
         return $this->resSuccess();
     }
 
@@ -95,27 +95,33 @@ class PassportController extends BaseController
      */
     public function register(LiveUserRequest $request)
     {
-        $input_data = $request->only('login_account', 'mobile','password','company','code','username');
+        $input_data = $request->only('login_account', 'mobile', 'password', 'company', 'code', 'username');
         $check = checkCode('login', $input_data['mobile'], $input_data['code']);
         if ($check['code']) {
             return $this->resFailed(600, $check['msg']);
         }
         $chars = "/^13[0-9]{1}[0-9]{8}$|15[0-9]{1}[0-9]{8}$|18[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|17[0-9]{1}[0-9]{8}$|19[0-9]{1}[0-9]{8}$|16[0-9]{1}[0-9]{8}$/";
 
-        if(!preg_match($chars, $input_data['mobile']))
-        {
+        if (!preg_match($chars, $input_data['mobile'])) {
             return $this->resFailed(600, '手机号格式错误');
         }
         $shop_id = '0';
-        $hasPassword = preg_match('/^(\w*(?=\w*\d)(?=\w*[A-Za-z])\w*){8,16}$/', $input_data['password']);
+        /*$hasPassword = preg_match('/^(\w*(?=\w*\d)(?=\w*[A-Za-z])\w*){8,16}$/', $input_data['password']);
         if(!$hasPassword) {
             return $this->resFailed(702,'8-16位字符（英文/数字/符号）至少两种或下划线组合');
+        }*/
+
+        $hasPassword = preg_match('/^\w{6,16}$/', $input_data['password']);
+        if (!$hasPassword) {
+            return $this->resFailed(702, '6-16位字符（由数字、英文字母或者下划线组成）');
         }
+
         $data['password'] = bcrypt($input_data['password']);
         $data['mobile'] = $input_data['mobile'];
         $data['login_account'] = $input_data['login_account'];
-        $data['company'] = $input_data['company'];
+        $data['company'] = $input_data['company'] ?? '';
         $data['username'] = $input_data['username'];
+        $data['account_end_time'] = strtotime(date('Y-m-d H:i:s', strtotime('+1 year'))); //每个账号一年的有效期
         LiveUsers::create($data);
 
         $token = $this->authenticate('live_users', $data['login_account'], $data['password']);
@@ -125,7 +131,7 @@ class PassportController extends BaseController
     /**
      * [sendLoginCode 发送登录验证码]
      * @Author mssjxzw
-     * @param  Request $request [description]
+     * @param Request $request [description]
      * @return [type]           [description]
      */
     public function sendLoginCode(Request $request)
@@ -143,20 +149,20 @@ class PassportController extends BaseController
 
     public function resetPwd(Request $request)
     {
-        $input_data = $request->only('mobile','password','code');
+        $input_data = $request->only('mobile', 'password', 'code');
         $check = checkCode('login', $input_data['mobile'], $input_data['code']);
         if ($check['code']) {
             return $this->resFailed(600, $check['msg']);
         }
         DB::beginTransaction();
         try {
-            LiveUsers::where('mobile',$input_data['mobile'])->update(['password'=>bcrypt($request->password)]);
+            LiveUsers::where('mobile', $input_data['mobile'])->update(['password' => bcrypt($request->password)]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->resFailed(402,'修改密码失败');
+            return $this->resFailed(402, '修改密码失败');
         }
-        return $this->resSuccess([],'修改成功，重新登录');
+        return $this->resSuccess([], '修改成功，重新登录');
     }
 
     /**
@@ -171,11 +177,11 @@ class PassportController extends BaseController
         $user_id = $this->user->id;
 
         try {
-            $data = LiveUsers::where('id','=',$user_id)->select('id','username','img_url','created_at')->first();
+            $data = LiveUsers::where('id', '=', $user_id)->select('id', 'username', 'img_url', 'created_at')->first();
         } catch (\Exception $e) {
             return $this->resFailed(702, $e->getMessage());
         }
-        $expiration = date('Y-m-d H:i:s',strtotime('+1year', strtotime($data['created_at'])));//
+        $expiration = date('Y-m-d H:i:s', strtotime('+1year', strtotime($data['created_at'])));//
         $data['expiration'] = $expiration;
         unset($data['created_at']);
         return $this->resSuccess([
@@ -196,10 +202,10 @@ class PassportController extends BaseController
         $user_id = $this->user->id;
         $live_id = $this->user->live_id;
         try {
-            LiveUsers::where('id','=',$user_id)->update($data);
+            LiveUsers::where('id', '=', $user_id)->update($data);
             $service = new ImService();
-            $accid = Lives::where('id','=',$live_id)->select('accid')->first();
-            $service->updateUser(['accid'=>$accid['accid'],'name'=>$data['username']]);
+            $accid = Lives::where('id', '=', $live_id)->select('accid')->first();
+            $service->updateUser(['accid' => $accid['accid'], 'name' => $data['username']]);
         } catch (\Exception $e) {
             return $this->resFailed(702, $e->getMessage());
         }
@@ -215,8 +221,8 @@ class PassportController extends BaseController
     public function versions(Request $request)
     {
         $data = AppVersions::orderBy('id', 'desc')->first();
-        if($data['versions'] == $request->versions){
-          #  $error = json_encode();
+        if ($data['versions'] == $request->versions) {
+            #  $error = json_encode();
             return $this->resFailed(702, '已是最新版本');
         }
         return $this->resSuccess($data);
