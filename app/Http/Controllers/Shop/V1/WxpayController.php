@@ -234,6 +234,10 @@ class WxpayController extends BaseController
             'input' =>$request->input()
         ]);
 
+        \Log::info([
+            'getContent' =>$request->getContent()
+        ]);
+
         $pay = Pay::wechat();
         try {
             $data = $pay->verify();
