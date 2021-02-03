@@ -116,6 +116,12 @@ class PassportController extends BaseController
             return $this->resFailed(702, '6-16位字符（由数字、英文字母或者下划线组成）');
         }
 
+        $user = LiveUsers::where('login_account', $input_data['login_account'])->first();
+        if($user){
+            return $this->resFailed(702, '该手机号码已经注册');
+        }
+
+
         $data['password'] = bcrypt($input_data['password']);
         $data['mobile'] = $input_data['mobile'];
         $data['login_account'] = $input_data['login_account'];
