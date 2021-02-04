@@ -509,7 +509,7 @@ class SecKillService
     //更新秒杀活动缓存
     public function updateSeckillApplieCache($gm_id) {
         Cache::forget('cache_seckill_applie_gmid_'.$gm_id);
-        cacheRemember('cache_seckill_applie_gmid_'.$gm_id, now()->addMinutes(10), function () use ($gm_id){
+        Cache::remember('cache_seckill_applie_gmid_'.$gm_id, now()->addMinutes(10), function () use ($gm_id){
             $nowTime = date('Y-m-d H:i:s', time());
             $result = SecKillApplie::where('end_time', '>=', $nowTime)->where('gm_id', '=', $gm_id)->orderBy('start_time', 'asc')->orderBy('id',
                 'desc')->select('id','activity_name', 'apply_end_time', 'start_time', 'end_time')->get();
