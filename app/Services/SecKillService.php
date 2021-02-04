@@ -525,7 +525,7 @@ class SecKillService
     //更新秒杀活动商品列表的缓存
     public function updateSeckillApIdCache($id) {
         Cache::forget('cache_seckill_ap_id' . $id);
-        cacheRemember('cache_seckill_ap_id' . $id, now()->addMinutes(10), function () use ($id){
+        Cache::remember('cache_seckill_ap_id' . $id, now()->addMinutes(10), function () use ($id){
             $result = SecKillGood::where('seckill_ap_id', '=', $id)->where('verify_status', '=',
                 '2')->orderBy('sort', 'desc')->get();
             if (count($result) > 0) {

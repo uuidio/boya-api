@@ -357,11 +357,11 @@ class PromoterController extends BaseController
 
         try {
             //免审直接成为推广员
-            if (!$conf_value['platform_attrs']['status']) {
-                $this->applyDirectAccount($result);
-            } else {
+//            if (!$conf_value['platform_attrs']['status']) {
+//                $this->applyDirectAccount($result);
+//            } else {
                 $this->applyAccount($result);
-            }
+//            }
         } catch (\Exception $e) {
             return $this->resFailed(600, $e->getMessage());
         }
