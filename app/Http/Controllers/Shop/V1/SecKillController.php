@@ -142,6 +142,11 @@ class SecKillController extends BaseController
             unset($goods);
         }
 
+        \Log::info([
+            '$return' =>$return
+        ]);
+
+
         return $this->resSuccess($return);
     }
 
