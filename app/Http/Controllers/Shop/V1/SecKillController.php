@@ -10,6 +10,7 @@
 namespace ShopEM\Http\Controllers\Shop\V1;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use ShopEM\Http\Controllers\Shop\BaseController;
 use ShopEM\Http\Requests\Shop\SecKillStoreRequest;
@@ -61,7 +62,9 @@ class SecKillController extends BaseController
         // $return['sec_kill_list'] = $applyInfoArr;
 
         $gm_id = $this->GMID;
-        $return['sec_kill_list'] = cacheRemember('cache_seckill_applie_gmid_'.$gm_id, now()->addMinutes(10), function () use ($gm_id){
+    
+                                    //cacheRemember
+        $return['sec_kill_list'] = Cache::remember('cache_seckill_applie_gmid_'.$gm_id, now()->addMinutes(10), function () use ($gm_id){
             $nowTime = date('Y-m-d H:i:s', time());
             $result = SecKillApplie::where('end_time', '>=', $nowTime)->where('gm_id', '=', $gm_id)->orderBy('start_time', 'asc')->orderBy('id',
                 'desc')->select('id','activity_name', 'apply_end_time', 'start_time', 'end_time')->get();
