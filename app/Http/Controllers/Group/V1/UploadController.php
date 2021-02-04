@@ -77,7 +77,7 @@ class UploadController extends BaseController
 
         #$new = AppVersions::orderBy('id', 'desc')->first();
 
-        return $this->resSuccess(env('APP_URL').'uploads/'.$data['url']);
+        return $this->resSuccess(env('APP_URL').'/uploads/'.$data['url']);
     }
 
     /**
