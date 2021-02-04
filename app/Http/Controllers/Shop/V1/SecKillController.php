@@ -62,7 +62,7 @@ class SecKillController extends BaseController
         // $return['sec_kill_list'] = $applyInfoArr;
 
         $gm_id = $this->GMID;
-    
+
                                     //cacheRemember
         $return['sec_kill_list'] = Cache::remember('cache_seckill_applie_gmid_'.$gm_id, now()->addMinutes(10), function () use ($gm_id){
             $nowTime = date('Y-m-d H:i:s', time());
