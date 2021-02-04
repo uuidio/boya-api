@@ -126,6 +126,8 @@ class SecKillController extends BaseController
             return $result;
         });
 
+        \Log::info($return);
+
         if (!empty($return['activiy_goods_list'])) 
         {
             foreach ($return['activiy_goods_list'] as &$goods) 
