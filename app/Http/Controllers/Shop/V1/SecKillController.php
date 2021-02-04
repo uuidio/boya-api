@@ -115,7 +115,7 @@ class SecKillController extends BaseController
         //     $now_activiy_goods_list_arr = $now_activiy_goods_list->toArray();
         // }
         
-        $return['activiy_goods_list'] = cacheRemember('cache_seckill_ap_id' . $seckill_ap_id, now()->addMinutes(10), function () use ($seckill_ap_id){
+        $return['activiy_goods_list'] = Cache::remember('cache_seckill_ap_id' . $seckill_ap_id, now()->addMinutes(10), function () use ($seckill_ap_id){
             $result = SecKillGood::where('seckill_ap_id', '=', $seckill_ap_id)->where('verify_status', '=',
                 '2')->orderBy('sort', 'desc')->get();
             if (count($result) > 0) {
@@ -277,7 +277,7 @@ class SecKillController extends BaseController
         if ($goods) {
             //$data_goods = Goods::find($goods->goods_id);
             $goods_id = $goods->goods_id;
-            $data_goods = cacheRemember('cache_detail_goods_id_' . $goods_id, now()->addMinutes(10), function () use ($goods_id){
+            $data_goods = Cache::remember('cache_detail_goods_id_' . $goods_id, now()->addMinutes(10), function () use ($goods_id){
                 return Goods::find($goods_id);
             });
         }
@@ -298,7 +298,7 @@ class SecKillController extends BaseController
         $data['transport_id'] = $transport_id;
         $data['gm_id'] = $goods->gm_id;
 
-        $secKillPrice = cacheRemember('cache_seckillgood_sku_id_' . $data['sku_id'] . '_activity_id_'.$data['activity_id'], now()->addMinutes(10), function () use ($data){
+        $secKillPrice = Cache::remember('cache_seckillgood_sku_id_' . $data['sku_id'] . '_activity_id_'.$data['activity_id'], now()->addMinutes(10), function () use ($data){
             return SecKillGood::where([
                 'sku_id'        => $data['sku_id'],
                 'seckill_ap_id' => $data['activity_id']
@@ -357,7 +357,7 @@ class SecKillController extends BaseController
      */
     public function getGoodsSpecListByGoodsId($id)
     {
-        $spec_array = cacheRemember('cache_goods_sku_id_' . $id, now()->addMinutes(10), function () use ($id){
+        $spec_array = Cache::remember('cache_goods_sku_id_' . $id, now()->addMinutes(10), function () use ($id){
             return GoodsSku::where(['id' => $id])->first();
         });
         return $spec_array;
@@ -382,7 +382,7 @@ class SecKillController extends BaseController
 
         //$detail_goods = $repository->detail($id);
         //
-        $detail_goods = cacheRemember('cache_detail_goods_id_' . $id, now()->addMinutes(10), function () use ($id){
+        $detail_goods = Cache::remember('cache_detail_goods_id_' . $id, now()->addMinutes(10), function () use ($id){
             return Goods::find($id);
         });
 
