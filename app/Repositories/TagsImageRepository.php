@@ -66,7 +66,11 @@ class TagsImageRepository
 
         # $lists = $LiveUsersModel->select(listFieldToSelect($this->listShowFields()))->get()->paginate($request['per_page']);
 //        $lists = $LiveUsersModel->orderBy('id', 'desc')->paginate($request['per_page']);
-        $lists = TagImage::where('uid', $request['uid'])->orderBy('id', 'desc')->paginate($request['per_page']);
+
+
+        $lists = TagImage::where('uid', $request['uid'])
+            ->where('tag_id', $request['tag_id'])
+            ->orderBy('id', 'desc')->paginate($request['per_page']);
 
         return $lists;
     }
