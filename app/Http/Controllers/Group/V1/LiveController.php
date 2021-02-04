@@ -272,6 +272,7 @@ class LiveController extends BaseController
     public function noticeAdd(Request $request)
     {
         $data = $request->only('title', 'notice', 'img', 'location', 'wide_ratio');
+        $data['location'] = $data['location'] ?? '';
         Notice::create($data);
 
         return $this->resSuccess();

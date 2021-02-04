@@ -77,7 +77,9 @@ class AutocueRepository
                 $builder->where('cid', $request['cid']);
             })
             ->where('uid', $request['uid'])
-            ->orderBy('id', 'desc')->paginate($request['per_page']);
+            ->orderBy('sort', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate($request['per_page']);
 
         return $lists;
     }
