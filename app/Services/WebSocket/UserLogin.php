@@ -39,17 +39,17 @@ class UserLogin
     {
         $process = new Process(function () use ($ws) {
             while (true) {
-                $user = Cache::get('user');
-                if ($user == 1) {
-                    $content = date('YmdHis');
-                    foreach ($this->ws->connections as $fd) {
-                        $this->ws->push($fd, $content);
-                    }
+//                $user = Cache::get('user');
+//                if ($user == 1) {
+//                    $content = date('YmdHis');
+//                    foreach ($this->ws->connections as $fd) {
+//                        $this->ws->push($fd, $content);
+//                    }
+//
+//                    Cache::put('user', 2);
+//                }
 
-                    Cache::put('user', 2);
-                }
-
-                sleep(1);
+                sleep(10);
             }
         }, false, 2, 1);
 
