@@ -83,19 +83,19 @@ class UserLogin
         \Log::info([
             'fd' => $request->fd,
             'server' => $request->server,
-            'uid' => $request->get['uid'],
-            'token' => $request->get['token'],
+//            'uid' => $request->get['uid'],
+//            'token' => $request->get['token'],
         ]);
 
-        $fd = $request->fd;
-        $uid = $request->get['uid'];
-        $token = md5($request->get['token']);
-
-        $redis = new Predis();
-        $key = $uid . '-fd';
-        $val = $token . ':' . $fd;
-
-        $redis->lpush($key, [$val]);
+//        $fd = $request->fd;
+//        $uid = $request->get['uid'];
+//        $token = md5($request->get['token']);
+//
+//        $redis = new Predis();
+//        $key = $uid . '-fd';
+//        $val = $token . ':' . $fd;
+//
+//        $redis->lpush($key, [$val]);
 
         $ws->push($request->fd, "hello, welcome\n" . $request->fd);
     }
