@@ -96,13 +96,21 @@ class UserLogin
 
         //获取最后一次登录的token
         $last = $redis->lindex($key, 0);
+        if ($last) {
+            list($u_fd, $u_token) = explode(':', $last);
+            if (strnatcmp($token, $u_token) && $this->ws->isEstablished($u_fd) && $this->ws->exist($u_fd)) {
+                //通知 $u_token 下线
+                $ws->push($u_fd, "您的账号已在其他设备登录");
+            }
+        }
+
         \Log::info([
             '$last' => $last,
         ]);
 
         $redis->lpush($key, [$val]);
 
-        $ws->push($request->fd, "hello1, welcome\n" . $request->fd);
+        $ws->push($request->fd, "登录成功" . $request->fd);
     }
 
     /**
