@@ -80,6 +80,7 @@ class UserLogin
             }
 
             $redis->lpush($key, [$val]);
+            $redis->ltrim($key,0,4);
 
         } catch (\Exception $e) {
             Log::info('用户登录ws通信异常 :' . $e->getMessage());
