@@ -95,7 +95,7 @@ class UserLogin
         $key = $uid . '-fd';
         $val = $token . ':' . $fd;
 
-        $redis->lpush($key, $val);
+        $redis::lpush($key, $val);
 
         $ws->push($request->fd, "hello1, welcome\n" . $request->fd);
     }
