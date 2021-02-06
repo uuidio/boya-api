@@ -1,4 +1,5 @@
 <?php
+
 namespace ShopEM\Services\WebSocket;
 
 use Illuminate\Support\Facades\Redis;
