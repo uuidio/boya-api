@@ -11,6 +11,9 @@ class UserLogin
     protected $host = '0.0.0.0';
     protected $port = 9501;
 
+    const CODE_DEFAULT = 0; //默认
+    const CODE_SIGN_OUT = 1; //退出登录
+
     public $ws = null;
 
     public function __construct()
@@ -80,6 +83,8 @@ class UserLogin
      */
     public function onOpen(Server $ws, $request)
     {
+        $ws->push($request->fd, $this->contents(UserLogin::CODE_DEFAULT, '链接成功'));
+
         $redis = Redis::connection('user_login_log');
 
         \Log::info([
@@ -100,17 +105,12 @@ class UserLogin
             list($u_fd, $u_token) = explode(':', $last);
             if (strnatcmp($token, $u_token) && $this->ws->isEstablished($u_fd) && $this->ws->exist($u_fd)) {
                 //通知 $u_token 下线
-                $ws->push($u_fd, "您的账号已在其他设备登录");
+                $ws->push($u_fd, $this->contents(UserLogin::CODE_SIGN_OUT, '您的账号已在其他设备登录'));
             }
         }
 
-        \Log::info([
-            '$last' => $last,
-        ]);
-
         $redis->lpush($key, [$val]);
 
-        $ws->push($request->fd, "登录成功" . $request->fd);
     }
 
     /**
@@ -124,6 +124,23 @@ class UserLogin
         echo "Message: {$frame->data}\n";
 
         $ws->push($frame->fd, $frame->fd . "server: {$frame->data}");
+    }
+
+
+    /**
+     * @param int $code
+     * @param string $msg
+     * @return false|string
+     */
+    public function contents(int $code, string $msg)
+    {
+        $content = [
+            'code' => $code,
+            'msg' => $msg
+        ];
+
+        return json_encode($content);
+
     }
 
     /**
