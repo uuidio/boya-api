@@ -92,8 +92,8 @@ class UserLogin
         $uid = $request->get['uid'];
         $token = md5($request->get['token']);
 
-        $key = $uid . '-fd';
-        $val = $token . ':' . $fd;
+        $key = $uid . '_fd';
+        $val = $fd . ':' . $token;
 
         $redis->lpush($key, [$val]);
 
