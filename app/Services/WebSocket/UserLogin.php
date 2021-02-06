@@ -95,7 +95,7 @@ class UserLogin
         $val = $fd . ':' . $token;
 
         //获取最后一次登录的token
-        $last = $redis->lindex($key, 1);
+        $last = $redis->lindex($key, 0);
         \Log::info([
             '$last' => $last,
         ]);
