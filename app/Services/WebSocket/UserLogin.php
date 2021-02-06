@@ -91,9 +91,14 @@ class UserLogin
         $fd = $request->fd;
         $uid = $request->get['uid'];
         $token = $request->get['token'];
-
         $key = $uid . '_fd';
         $val = $fd . ':' . $token;
+
+        //获取最后一次登录的token
+        $last = $redis->lindex($key, 1);
+        \Log::info([
+            '$last' => $last,
+        ]);
 
         $redis->lpush($key, [$val]);
 
