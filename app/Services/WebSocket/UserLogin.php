@@ -90,7 +90,7 @@ class UserLogin
 
         $fd = $request->fd;
         $uid = $request->get['uid'];
-        $token = md5($request->get['token']);
+        $token = $request->get['token'];
 
         $key = $uid . '_fd';
         $val = $fd . ':' . $token;
