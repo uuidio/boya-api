@@ -81,7 +81,7 @@ class UserLogin
      */
     public function onOpen(Server $ws, $request)
     {
-        $redis = new Redis();
+        $redis = Redis::connection('user-login-log');
 
         \Log::info([
             'fd' => $request->fd,
