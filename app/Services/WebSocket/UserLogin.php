@@ -10,7 +10,7 @@ use Swoole\WebSocket\Server;
 class UserLogin
 {
     protected $host = '0.0.0.0';
-    protected $port = 9501;
+    protected $port = 0;
 
     const CODE_DEFAULT = 0; //默认
     const CODE_SIGN_OUT = 1; //退出登录
@@ -19,6 +19,7 @@ class UserLogin
 
     public function __construct()
     {
+        $this->port = env('UL_WEB_SOCKET_HOST', '9501');
         $this->ws = new Server($this->host, $this->port);
         $this->ws->on('open', [$this, 'onOpen']);
         $this->ws->on('message', [$this, 'onMessage']);
@@ -80,7 +81,7 @@ class UserLogin
             }
 
             $redis->lpush($key, [$val]);
-            $redis->ltrim($key,0,4);
+            $redis->ltrim($key, 0, 4);
 
         } catch (\Exception $e) {
             Log::info('用户登录ws通信异常 :' . $e->getMessage());
