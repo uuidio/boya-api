@@ -3,7 +3,6 @@
 namespace ShopEM\Services\WebSocket;
 
 use Illuminate\Support\Facades\Redis;
-use Predis\Client as Predis;
 use Swoole\Process;
 use Swoole\WebSocket\Server;
 
@@ -81,7 +80,7 @@ class UserLogin
      */
     public function onOpen(Server $ws, $request)
     {
-        $redis = Redis::connection('userloginlog');
+        $redis = Redis::connection('user_login_log');
 
         \Log::info([
             'fd' => $request->fd,
@@ -96,7 +95,7 @@ class UserLogin
         $key = $uid . '-fd';
         $val = $token . ':' . $fd;
 
-        $redis::lpush($key, $val);
+        $redis->lpush($key, [$val]);
 
         $ws->push($request->fd, "hello1, welcome\n" . $request->fd);
     }
