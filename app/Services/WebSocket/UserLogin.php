@@ -26,8 +26,8 @@ class UserLogin
         //$this->ws->addProcess($this->pushUserLogoutProcess($this->ws));
         $this->ws->set([
             //心跳检测
-            'heartbeat_check_interval' => 60,
-            'heartbeat_idle_time' => 120,
+            'heartbeat_check_interval' => 60, //每60秒遍历一次
+            'heartbeat_idle_time' => 600, // 连接如果600秒内未向服务器发送任何数据，此连接将被强制关闭
         ]);
 
         $this->ws->start();
@@ -96,6 +96,7 @@ class UserLogin
      */
     public function onMessage(Server $ws, $frame)
     {
+
         Log::info($frame->fd . "message : {$frame->data}");
 
         $ws->push($frame->fd, $this->contents(UserLogin::CODE_DEFAULT, '服务端成功接收消息'));
