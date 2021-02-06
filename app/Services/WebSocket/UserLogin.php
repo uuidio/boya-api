@@ -2,6 +2,7 @@
 
 namespace ShopEM\Services\WebSocket;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Swoole\Process;
 use Swoole\WebSocket\Server;
@@ -22,7 +23,7 @@ class UserLogin
         $this->ws->on('open', [$this, 'onOpen']);
         $this->ws->on('message', [$this, 'onMessage']);
         $this->ws->on('close', [$this, 'onClose']);
-        $this->ws->addProcess($this->pushUserLogoutProcess($this->ws));
+        //$this->ws->addProcess($this->pushUserLogoutProcess($this->ws));
         $this->ws->set([
             //心跳检测
             'heartbeat_check_interval' => 60,
@@ -42,37 +43,12 @@ class UserLogin
     {
         $process = new Process(function () use ($ws) {
             while (true) {
-//                $user = Cache::get('user');
-//                if ($user == 1) {
-//                    $content = date('YmdHis');
-//                    foreach ($this->ws->connections as $fd) {
-//                        $this->ws->push($fd, $content);
-//                    }
-//
-//                    Cache::put('user', 2);
-//                }
 
-                sleep(10);
+                sleep(1);
             }
         }, false, 2, 1);
 
         return $process;
-    }
-
-    public function onRequest($request, $response)
-    {
-        \Log::info([
-            '$request->get' => $request->get,
-        ]);
-
-        // 接收http请求从get获取message参数的值，给用户推送
-        // $this->server->connections 遍历所有websocket连接用户的fd，给所有用户推送
-        foreach ($this->ws->connections as $fd) {
-            // 需要先判断是否是正确的websocket连接，否则有可能会push失败
-            if ($this->ws->isEstablished($fd)) {
-                $this->ws->push($fd, $request->get['message']);
-            }
-        }
     }
 
     /**
@@ -85,31 +61,30 @@ class UserLogin
     {
         $ws->push($request->fd, $this->contents(UserLogin::CODE_DEFAULT, '链接成功'));
 
-        $redis = Redis::connection('user_login_log');
+        try {
+            $redis = Redis::connection('user_login_log');
+            $fd = $request->fd;
+            $uid = $request->get['uid'];
+            $token = $request->get['token'];
+            $key = $uid . '_fd';
+            $val = $fd . ':' . $token;
+            //获取最后一次登录的token
+            $last = $redis->lindex($key, 0);
 
-        \Log::info([
-            'fd' => $request->fd,
-            'server' => $request->server,
-            'get' => $request->get,
-        ]);
-
-        $fd = $request->fd;
-        $uid = $request->get['uid'];
-        $token = $request->get['token'];
-        $key = $uid . '_fd';
-        $val = $fd . ':' . $token;
-
-        //获取最后一次登录的token
-        $last = $redis->lindex($key, 0);
-        if ($last) {
-            list($u_fd, $u_token) = explode(':', $last);
-            if (strnatcmp($token, $u_token) && $this->ws->isEstablished($u_fd) && $this->ws->exist($u_fd)) {
-                //通知 $u_token 下线
-                $ws->push($u_fd, $this->contents(UserLogin::CODE_SIGN_OUT, '您的账号已在其他设备登录'));
+            if ($last) {
+                list($u_fd, $u_token) = explode(':', $last);
+                if (strnatcmp($token, $u_token) && $this->ws->isEstablished($u_fd) && $this->ws->exist($u_fd)) {
+                    //通知 $u_token 下线
+                    $ws->push($u_fd, $this->contents(UserLogin::CODE_SIGN_OUT, '您的账号已在其他设备登录'));
+                }
             }
-        }
 
-        $redis->lpush($key, [$val]);
+            $redis->lpush($key, [$val]);
+
+        } catch (\Exception $e) {
+            Log::info('用户登录ws通信异常 :' . $e->getMessage());
+            $ws->push($request->fd, $this->contents(UserLogin::CODE_DEFAULT, '服务器异常'));
+        }
 
     }
 
@@ -121,9 +96,9 @@ class UserLogin
      */
     public function onMessage(Server $ws, $frame)
     {
-        echo "Message: {$frame->data}\n";
+        Log::info($frame->fd . "message : {$frame->data}");
 
-        $ws->push($frame->fd, $frame->fd . "server: {$frame->data}");
+        $ws->push($frame->fd, $this->contents(UserLogin::CODE_DEFAULT, '服务端成功接收消息'));
     }
 
 
@@ -139,7 +114,7 @@ class UserLogin
             'msg' => $msg
         ];
 
-        return json_encode($content,JSON_UNESCAPED_UNICODE);
+        return json_encode($content, JSON_UNESCAPED_UNICODE);
 
     }
 
@@ -151,14 +126,7 @@ class UserLogin
      */
     public function onClose(Server $ws, $fd)
     {
-        \Log::info($fd . ':关闭链接');
-        echo "client-{$fd} is closed\n";
-    }
-
-    public function pushUserLogout($content)
-    {
-        foreach ($this->ws->connections as $fd) {
-            $this->ws->push($fd, $content);
-        }
+        Log::info($fd . ':关闭链接');
+        $ws->push($fd, $this->contents(UserLogin::CODE_DEFAULT, '关闭链接'));
     }
 }
