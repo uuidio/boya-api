@@ -139,7 +139,7 @@ class UserLogin
             'msg' => $msg
         ];
 
-        return json_encode($content);
+        return json_encode($content,JSON_UNESCAPED_UNICODE);
 
     }
 
