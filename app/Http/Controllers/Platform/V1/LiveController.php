@@ -345,8 +345,8 @@ class LiveController extends BaseController
             return $res;
         }
         $data['img'] = $res['result']['pic_url'];
-        $data['wide_ratio'] = $res['wide_ratio'] ?? '';
-        $data['location'] = $res['location'] ?? '';
+        $data['wide_ratio'] = $data['wide_ratio'] ?? '';
+        $data['location'] = $data['location'] ?? '';
 
         Notice::create($data);
 
