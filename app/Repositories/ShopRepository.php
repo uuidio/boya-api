@@ -97,7 +97,8 @@ class ShopRepository
      */
     public function search($request, $sign = '', $isDown = false)
     {
-        $shopModel = new Shop();
+//        $shopModel = new Shop();
+        $shopModel = Shop::where('shop_state','1');
 
         $request['per_page'] = isset($request['per_page']) && $request['per_page'] ? $request['per_page'] : config('app.per_page');
 
