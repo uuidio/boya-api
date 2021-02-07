@@ -373,8 +373,8 @@ class LiveController extends BaseController
         $data['img'] = $res['result']['pic_url'];
         $notice->title = $request->title;
         $notice->notice = $request->notice;
-        $notice->location = $request->location;
-        $notice->wide_ratio = $request->wide_ratio;
+        $notice->location = $request->location ?? '';
+        $notice->wide_ratio = $request->wide_ratio ?? '';
         $notice->img = $data['img'];
         $notice->save();
 
