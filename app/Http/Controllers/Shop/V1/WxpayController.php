@@ -229,9 +229,6 @@ class WxpayController extends BaseController
      */
     public function notify()
     {
-
-        \Log::info('notify success');
-
         $xml = request()->getContent();
         $res = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         try {
@@ -251,15 +248,12 @@ class WxpayController extends BaseController
             return 'fail';
         }
 
-        \Log::info('notify 1s');
-
         $payment_data['trade_no'] = $data->transaction_id;
         $payment_data['payment_id'] = $data->out_trade_no;
         $payment_data['pay_app'] = $payment_info->pay_app;
 
         $tradePaybill = TradePaybill::where('payment_id', $payment_info->payment_id)->first();
         $trade = Trade::where('tid', $tradePaybill->tid)->first();
-        \Log::info('notify 2');
 
         #如果是系统自动关闭的订单，支付成功的要自动退款
         if ($trade && $trade->status == Trade::TRADE_CLOSED_BY_SYSTEM) {
@@ -267,16 +261,12 @@ class WxpayController extends BaseController
             return $pay->success();
             exit;
         }
-        \Log::info('notify 3');
 
         $no_status = [Trade::TRADE_FINISHED, Trade::TRADE_CLOSED];
         if ($trade && in_array($trade->status, $no_status)) {
-            \Log::info('notify 4');
-
             return $pay->success();
             exit;
         }
-        \Log::info('notify 6');
 
         $payment_data['user_id'] = $payment_info->user_id;
 
