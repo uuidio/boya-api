@@ -41,6 +41,6 @@ class DistributionReward implements ShouldQueue
         //推物分润
         $tradeSpitService->DistributionReward($this->payment_id);
         //分销分成
-//        $tradeSpitService->DistributionProfiles($this->payment_id);
+        $tradeSpitService->DistributionProfiles($this->payment_id);
     }
 }
