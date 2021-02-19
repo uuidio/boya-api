@@ -5,9 +5,12 @@ namespace ShopEM\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use ShopEM\Models\LiveUsers;
+use ShopEM\Traits\ApiResponse;
 
 class LiveUserAccountTime
 {
+    use ApiResponse;
+
     /**
      * Handle an incoming request.
      *
