@@ -259,17 +259,24 @@ class WxpayController extends BaseController
 
         $tradePaybill = TradePaybill::where('payment_id', $payment_info->payment_id)->first();
         $trade = Trade::where('tid', $tradePaybill->tid)->first();
+        \Log::info('notify 2');
+
         #如果是系统自动关闭的订单，支付成功的要自动退款
         if ($trade && $trade->status == Trade::TRADE_CLOSED_BY_SYSTEM) {
             (new PaymentService)->systemDoRefund($payment_data, $payment_info);
             return $pay->success();
             exit;
         }
+        \Log::info('notify 3');
+
         $no_status = [Trade::TRADE_FINISHED, Trade::TRADE_CLOSED];
         if ($trade && in_array($trade->status, $no_status)) {
+            \Log::info('notify 4');
+
             return $pay->success();
             exit;
         }
+        \Log::info('notify 6');
 
         $payment_data['user_id'] = $payment_info->user_id;
 
