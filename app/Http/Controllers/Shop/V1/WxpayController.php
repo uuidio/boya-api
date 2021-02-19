@@ -231,7 +231,7 @@ class WxpayController extends BaseController
     {
 
         \Log::info('notify success');
-        
+
         $xml = request()->getContent();
         $res = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         try {
@@ -250,6 +250,9 @@ class WxpayController extends BaseController
             Log::error('wechat notify: ' . $e->getMessage());
             return 'fail';
         }
+
+        \Log::info('notify 1s');
+
         $payment_data['trade_no'] = $data->transaction_id;
         $payment_data['payment_id'] = $data->out_trade_no;
         $payment_data['pay_app'] = $payment_info->pay_app;
