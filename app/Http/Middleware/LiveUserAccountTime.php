@@ -23,12 +23,6 @@ class LiveUserAccountTime
         $user_id = Auth::guard('live_users')->user()->id;
         $user = LiveUsers::where('id', $user_id)->select('id', 'account_end_time')->first();
 
-        \Log::info(
-            [
-                '$user' => $user->toArray()
-            ]
-        );
-
         if ($user) {
             if ($user->account_end_time < time()) {
                 return $this->resFailed(403, '您的账号已过期，请续费');
