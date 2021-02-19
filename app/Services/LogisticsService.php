@@ -225,9 +225,11 @@ class LogisticsService
 
         $param = json_encode($param);
 
-        $customer = 'FCAD357DBAB675562B7793573CAEB21A';
+//        $customer = 'FCAD357DBAB675562B7793573CAEB21A';
+        $customer = '4E164922A258757AE0D258C59DF8F39D';
 
-        $key = "TFLLxqMh4295";
+//        $key = "TFLLxqMh4295";
+        $key = "qPAdLYcg7142";
 
         $kd100ApiUrl = 'http://poll.kuaidi100.com/poll/query.do';
         //签名
