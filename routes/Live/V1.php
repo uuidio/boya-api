@@ -29,7 +29,7 @@ Route::namespace('ShopEM\Http\Controllers\Live\V1')->group(function () {
     Route::get('versions/check', 'PassportController@versions');    //版本
 });
 
-Route::namespace('ShopEM\Http\Controllers\Live\V1')->middleware('auth:live_users')->group(function () {
+Route::namespace('ShopEM\Http\Controllers\Live\V1')->middleware('auth:live_users', 'live.user.account')->group(function () {
 
     Route::get('live/oauth', 'PassportController@loginOauth');   //
     Route::post('live/begin', 'LiveController@begin');   // 开始直播

@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'oauth.providers' => \SMartins\PassportMultiauth\Http\Middleware\AddCustomProvider::class,
         // 权限管理
         'permission' => \ShopEM\Http\Middleware\PermissionAuthenticate::class,
+        'live.user.account' => \ShopEM\Http\Middleware\LiveUserAccountTime::class,
     ];
 
     /**
