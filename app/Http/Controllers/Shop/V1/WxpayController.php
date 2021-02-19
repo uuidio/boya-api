@@ -230,6 +230,8 @@ class WxpayController extends BaseController
     public function notify()
     {
 
+        \Log::info('notify success');
+        
         $xml = request()->getContent();
         $res = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         try {
