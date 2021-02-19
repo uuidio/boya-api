@@ -35,6 +35,7 @@ class DistributionReward implements ShouldQueue
      */
     public function handle()
     {
+        \Log::info('DistributionReward success');
         storageLog($this->payment_id,'success');
         // 拆分订单
         $tradeSpitService = new TradeService();
