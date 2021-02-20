@@ -21,6 +21,8 @@ class TestJob implements ShouldQueue
      */
     public function __construct($message)
     {
+        $this->queue = 'TestJ';
+
         $this->message = $message;
     }
 
