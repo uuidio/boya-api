@@ -64,8 +64,6 @@ class PaymentService
 
     public static function paySuccess($payment_data, $trade_no = 0)
     {
-        \Log::info('PaymentService paySuccess');
-
         $payment_id = $payment_data['payment_id'];
         DB::beginTransaction();
         try {
@@ -118,13 +116,11 @@ class PaymentService
             Log::info('pay success');
             DB::commit();
         } catch (\Exception $e) {
-            \Log::info($e->getMessage());
             Log::error($e->getMessage());
             DB::rollBack();
             throw new \Exception('状态恢复失败!' . $e->getMessage());
         }
 
-        \Log::info('1233444488');
 
         //变更秒杀订单状态
         $change = SecKillOrder::where(['payment_id' => $payment_id, 'state' => '2'])->count();
@@ -140,7 +136,6 @@ class PaymentService
         $cache_key = 'api_pay_status_id_' . $payment_id;
         $cache_value = ['status' => 'succ', 'payment_id' => $payment_id, 'payed_time' => $payed_time];
         Cache::put($cache_key, $cache_value, Carbon::now()->addMinutes(5));
-        \Log::info('12334444');
 
         //生成提货码
         $trades = Trade::whereIn('tid', function ($query) use ($payment_id) {
@@ -157,7 +152,6 @@ class PaymentService
             //2020-4-9 18:51:46 支付成功推送ERP
             TradePushErp::dispatch($trade['tid']);
         }
-        \Log::info('1233');
 
         //处理推物分润
         DistributionReward::dispatch($payment_id);

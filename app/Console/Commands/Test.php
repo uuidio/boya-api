@@ -4,6 +4,7 @@ namespace ShopEM\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use ShopEM\Jobs\TestJob;
 
 class Test extends Command
 {
@@ -38,8 +39,6 @@ class Test extends Command
      */
     public function handle()
     {
-        $pwd = bcrypt('admin123456');
-
-        DB::table('admin_users')->where('id',1)->update(['password' => $pwd]);
+        TestJob::dispatch('test job 消息');
     }
 }
