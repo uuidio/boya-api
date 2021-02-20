@@ -39,6 +39,6 @@ class Test extends Command
      */
     public function handle()
     {
-        TestJob::dispatch('test job 消息');
+        TestJob::dispatch('test job 消息')->delay(now()->addMinutes(1));
     }
 }
